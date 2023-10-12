@@ -1,0 +1,23 @@
+# depslib dependency file v1.0
+1697122716 source:c:\users\mateo\onedrive\escritorio\tpmaquina3\tp3-maquina\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+	"Envios.h"
+	"RAC.h"
+	"RAL.h"
+	"RS.h"
+
+1697122329 c:\users\mateo\onedrive\escritorio\tpmaquina3\tp3-maquina\envios.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+
+1697120231 c:\users\mateo\onedrive\escritorio\tpmaquina3\tp3-maquina\rac.h
+
+1697123189 c:\users\mateo\onedrive\escritorio\tpmaquina3\tp3-maquina\ral.h
+
+1697120230 c:\users\mateo\onedrive\escritorio\tpmaquina3\tp3-maquina\rs.h
+
