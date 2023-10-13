@@ -34,7 +34,7 @@ void mostrarenvio (Envio envio){
     printf("Nombre receptor: %s\n\n", envio.nombre_r);
 
 }
-int hashing(char * x, int M){
+int Hashing(char * x, int M){
     int longitud,i;
     int contador=0;
     longitud=strlen(x);

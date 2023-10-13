@@ -5,8 +5,10 @@
 #include <ctype.h>
 #include "Envios.h"
 #include "RAC.h"
+/*
 #include "RAL.h"
 #include "RS.h"
+*/
 int LecturaOperaciones();
 char* Mayusculas();
 void mostrarSubmenu()
@@ -165,9 +167,9 @@ int LecturaOperaciones()
                 if(codigoOperador == 1)
                 {
                   // AltaRAL(aux);
-
-                        printf("%d\n" , hashing(aux.codigo,300));
-
+/*
+                        printf("%d\n" , Hashing(aux.codigo,300));
+*/
                 }
                 if(codigoOperador == 2)
                 {
