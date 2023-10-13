@@ -43,4 +43,11 @@ int Hashing(char * x, int M){
      }
     return(contador%M);
 }
+
+typedef struct {
+    int lugar;
+    int exito;
+}rloc;
+ int FlagAlta = 0;
+
 #endif //UNTITLED_ENVIOS_H

@@ -5,10 +5,10 @@
 #include <ctype.h>
 #include "Envios.h"
 #include "RAC.h"
-/*
+
 #include "RAL.h"
 #include "RS.h"
-*/
+
 int LecturaOperaciones();
 char* Mayusculas();
 void mostrarSubmenu()
@@ -32,7 +32,6 @@ char *Mayusculas(char string[])
 
 
 
-
 int main()
 {
     // Crea las estructuras de datos (LSO, ABB) aqu
@@ -43,8 +42,10 @@ int main()
 rac RAC[MaxEnvios];
 initRAC(RAC);
 
+ral RAL[MaxEnvios];
+initRAL(RAL);
 
-
+   LecturaOperaciones(&RAC, &RAL);
 
     do
     {
@@ -60,7 +61,7 @@ initRAC(RAC);
             case 1:
                 system("cls");
 
-                LecturaOperaciones(&RAC);
+
 
                 printf("\n         AltaMax | AltaMed | BajaMax | BajaMed | Max.Ev.Ex | Med.Ev.Ex | Max.Ev.Fr | Med.Ev.Fr|\n");
                  printf("   RAL::\n");
@@ -86,11 +87,13 @@ initRAC(RAC);
 
                             printf("Rebalse Abierto Lineal (RAL):\n");
 
+                            MostrarEnviosRAL(RAL);
+
                             break;
                         case 2:
                             system("cls");
                             printf("Rebalse Abierto Cuadratico (RAC):\n");
-                            MostrarEnvios(RAC);
+                            MostrarEnviosRAC(RAC);
 
                             break;
                         case 3:
@@ -122,7 +125,7 @@ initRAC(RAC);
 
     return 0;
 }
-int LecturaOperaciones(rac *RAC)
+int LecturaOperaciones(rac *RAC, ral *RAL)
 {
 
     // Declaraciones e inicializaciones
@@ -172,7 +175,10 @@ int LecturaOperaciones(rac *RAC)
                 // Llama a la funci n correspondiente para alta o baja en las estructuras
                 if(codigoOperador == 1)
                 {
-                AltaRAC(RAC,aux);
+             AltaRAC(RAC,aux);
+
+
+                 AltaRAL(RAL,aux);
 /*
                         printf("%d\n" , Hashing(aux.codigo,300));
 */
@@ -180,14 +186,17 @@ int LecturaOperaciones(rac *RAC)
                 if(codigoOperador == 2)
                 {
 
+               BajaRAC(RAC,aux);
 
+              BajaRAL(RAL,aux);
 
                 }
 
             }
             else if (codigoOperador == 3)
             {
-
+                EvocarRAC(RAC,aux.codigo,&aux);
+                EvocarRAL(RAL,aux.codigo,&aux);
             }
             else
             {

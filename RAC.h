@@ -1,22 +1,20 @@
+#ifndef RAC_H
+#define RAC_H
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
 #define MaxEnvios 300
-#define MaxRAL 337
-#define Max 250
+
 ///---------------------------------------------------------ESTRUCTURAS
 typedef struct {
     Envio envio;
     int Flag; // 0 VIRGEN 1 LIBRE 2 OCUPADA
 } rac;
 
-typedef struct {
-    int lugar;
-    bool exito;
-}rloc;
-static int FlagAlta = 0;
+
+
 
 // ---------------------------------------------------------RAC
 void initRAC(rac *RAC) {
@@ -43,25 +41,19 @@ strcpy(RAC[i].envio.nombre_r, "");
 ///---------------------------------------------------------LOCALIZAR
 rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p){
 
-    int H = Hashing(C, MaxEnvios);
 
+
+    int H = Hashing(C, MaxEnvios);
     int i = 0, j = 1;
     int primerbaldelibre = -1; // Inicializado a un valor no válido
     int controldeprimerbaldelibre = 0;
     rloc aux;
-
-
  while (i < MaxEnvios && ((RAC[H].Flag != 0 && RAC[H].Flag != 1) || strcmp(RAC[H].envio.codigo, C) != 0)) {
-
-
-
         if (controldeprimerbaldelibre == 0 && RAC[H].Flag == 1) {
-
             primerbaldelibre = H;
             controldeprimerbaldelibre = 1;
         }
         H = (H + j) % MaxEnvios;
-
         i++;
         j++;
     }
@@ -178,7 +170,7 @@ void Muestra(Articulo A){
     printf("> PRECIO: %f\n", A.precio);
 }
 */
-void MostrarEnvios(rac RAC[]) {
+void MostrarEnviosRAC(rac RAC[]) {
     int i;
     for (i = 0; i < MaxEnvios; i++) {
         switch (RAC[i].Flag) {
@@ -198,3 +190,6 @@ void MostrarEnvios(rac RAC[]) {
 }
 
 
+// Contenido de rac.h
+
+#endif
