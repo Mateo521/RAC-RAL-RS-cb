@@ -21,3 +21,30 @@
 
 1697120230 c:\users\mateo\onedrive\escritorio\tpmaquina3\tp3-maquina\rs.h
 
+1697160555 source:c:\users\mateo\onedrive\escritorio\rac-ral-rs-cb\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+	"Envios.h"
+	"RAC.h"
+	"RAL.h"
+	"RS.h"
+
+1697160598 c:\users\mateo\onedrive\escritorio\rac-ral-rs-cb\envios.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+
+1697161218 c:\users\mateo\onedrive\escritorio\rac-ral-rs-cb\rac.h
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+	<string.h>
+	<ctype.h>
+
+1697160703 c:\users\mateo\onedrive\escritorio\rac-ral-rs-cb\ral.h
+
+1697160555 c:\users\mateo\onedrive\escritorio\rac-ral-rs-cb\rs.h
+

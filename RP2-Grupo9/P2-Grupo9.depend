@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1634535619 source:c:\franco\facultad\eda\eda 2021\segundo cuatrimestre\practico de máquina\p2-grupo9\main.c
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+	<string.h>
+	<ctype.h>
+
