@@ -16,49 +16,62 @@ typedef struct {
     int lugar;
     bool exito;
 }rloc;
-static int *FlagAlta = 0;
+static int FlagAlta = 0;
 
 // ---------------------------------------------------------RAC
 void initRAC(rac *RAC) {
+
     for (int i = 0; i < MaxEnvios; i++) {
+
         RAC[i].Flag = 0; // Inicializar el campo Flag a 0
 
         // Inicializar los campos de la estructura Envio dentro de la estructura rac
-        strcpy(RAC[i].envio.codigo, "null");
-        strcpy(RAC[i].envio.direccion, "null");
+       strcpy(RAC[i].envio.codigo, "");
+strcpy(RAC[i].envio.direccion, "");
+strcpy(RAC[i].envio.fecha_envio, "");
+strcpy(RAC[i].envio.fecha_recepcion, "");
+strcpy(RAC[i].envio.nombre, "");
+strcpy(RAC[i].envio.nombre_r, "");
         RAC[i].envio.dni_receptor = 0; // Inicializar dni_receptor a 0
         RAC[i].envio.dni_remitente = 0; // Inicializar dni_remitente a 0
-        strcpy(RAC[i].envio.fecha_envio, "null");
-        strcpy(RAC[i].envio.fecha_recepcion, "null");
-        strcpy(RAC[i].envio.nombre, "null");
-        strcpy(RAC[i].envio.nombre_r, "null");
+
     }
+
 }
 
 
 ///---------------------------------------------------------LOCALIZAR
 rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p){
+
     int H = Hashing(C, MaxEnvios);
+
     int i = 0, j = 1;
     int primerbaldelibre = -1; // Inicializado a un valor no válido
     int controldeprimerbaldelibre = 0;
     rloc aux;
 
 
-    while (i < MaxEnvios && (RAC[H].Flag != 0 || RAC[H].Flag == 1) && (strcmp(RAC[H].envio.codigo, C) != 0)) {
+ while (i < MaxEnvios && ((RAC[H].Flag != 0 && RAC[H].Flag != 1) || strcmp(RAC[H].envio.codigo, C) != 0)) {
+
+
+
         if (controldeprimerbaldelibre == 0 && RAC[H].Flag == 1) {
+
             primerbaldelibre = H;
             controldeprimerbaldelibre = 1;
         }
         H = (H + j) % MaxEnvios;
+
         i++;
         j++;
     }
 
     if (RAC[H].Flag == 0) {
+
         if (controldeprimerbaldelibre == 1) {
             H = primerbaldelibre;
         }
+
         aux.exito = false;
     } else {
         if (i == MaxEnvios) {
@@ -74,17 +87,23 @@ rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p){
     }
 
     aux.lugar = H;
+
+
     return aux;
 }
 
 ///---------------------------------------------------------ALTA
 int AltaRAC(rac *RAC, Envio envio) {
     int pos;
+
     rloc aux = LocalizarRAC(RAC, envio.codigo, pos,0);
-    if (aux.exito || *FlagAlta == 1) {
+
+    if (aux.exito || FlagAlta == 1) {
         return 0; // Elemento ya existe o no se puede agregar
     } else {
+
         // Si la función LocalizarRAC encontró un lugar disponible, puedes insertar el elemento C
+
         RAC[aux.lugar].envio = envio;
         RAC[aux.lugar].Flag = 2; // Marcar el casillero como OCUPADO
         // Actualiza cualquier otro contador o información que necesites
@@ -159,15 +178,20 @@ void Muestra(Articulo A){
     printf("> PRECIO: %f\n", A.precio);
 }
 */
-void MostrarRAC(rac *RAC){
+void MostrarEnvios(rac RAC[]) {
     int i;
-    for(i=0;i<MaxEnvios;i++){
-        switch(RAC[i].Flag){
-            case 0: printf("\t\t POSICION [ %i ] VIRGEN\n",i);break;
-            case 1: printf("\t\t POSICION [ %i ] LIBRE\n",i);break;
-            /*
-            case 2: printf("\t\t POSICION [ %i ] OCUPADA\n",i);Muestra(RAC[i]);break;
-            */
+    for (i = 0; i < MaxEnvios; i++) {
+        switch (RAC[i].Flag) {
+            case 0:
+                printf("\t\t POSICION [ %i ] VIRGEN\n", i);
+                break;
+            case 1:
+                printf("\t\t POSICION [ %i ] LIBRE\n", i);
+                break;
+            case 2:
+                printf("\t\t POSICION [ %i ] OCUPADA\n", i);
+                mostrarenvio(RAC[i].envio); // Llama a la función para mostrar un envío
+                break;
         }
     }
     system("pause");

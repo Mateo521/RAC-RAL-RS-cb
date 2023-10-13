@@ -39,7 +39,12 @@ int main()
 
     int opcion, submenu_opcion;
 
-    LecturaOperaciones();
+
+rac RAC[MaxEnvios];
+initRAC(RAC);
+
+
+
 
     do
     {
@@ -55,6 +60,7 @@ int main()
             case 1:
                 system("cls");
 
+                LecturaOperaciones(&RAC);
 
                 printf("\n         AltaMax | AltaMed | BajaMax | BajaMed | Max.Ev.Ex | Med.Ev.Ex | Max.Ev.Fr | Med.Ev.Fr|\n");
                  printf("   RAL::\n");
@@ -84,7 +90,7 @@ int main()
                         case 2:
                             system("cls");
                             printf("Rebalse Abierto Cuadratico (RAC):\n");
-
+                            MostrarEnvios(RAC);
 
                             break;
                         case 3:
@@ -116,7 +122,7 @@ int main()
 
     return 0;
 }
-int LecturaOperaciones()
+int LecturaOperaciones(rac *RAC)
 {
 
     // Declaraciones e inicializaciones
@@ -166,7 +172,7 @@ int LecturaOperaciones()
                 // Llama a la funci n correspondiente para alta o baja en las estructuras
                 if(codigoOperador == 1)
                 {
-                  // AltaRAL(aux);
+                AltaRAC(RAC,aux);
 /*
                         printf("%d\n" , Hashing(aux.codigo,300));
 */
