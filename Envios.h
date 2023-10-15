@@ -48,6 +48,6 @@ typedef struct {
     int lugar;
     int exito;
 }rloc;
- int FlagAlta = 0;
+
 
 #endif //UNTITLED_ENVIOS_H

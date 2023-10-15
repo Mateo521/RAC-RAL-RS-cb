@@ -129,7 +129,7 @@ int LecturaOperaciones(rac *RAC, ral *RAL)
 {
 
     // Declaraciones e inicializaciones
-    int respuesta = 2, alta=0,baja=0,evocar=0;
+    int respuesta = 2, alta=0,baja=0,evocar=0 ,FlagAlta = 0 ;
     Envio aux;
     FILE* fp;
 
@@ -175,10 +175,10 @@ int LecturaOperaciones(rac *RAC, ral *RAL)
                 // Llama a la funci n correspondiente para alta o baja en las estructuras
                 if(codigoOperador == 1)
                 {
-             AltaRAC(RAC,aux);
+             AltaRAC(RAC,aux, &FlagAlta);
 
 
-                 AltaRAL(RAL,aux);
+                 AltaRAL(RAL,aux, &FlagAlta);
 /*
                         printf("%d\n" , Hashing(aux.codigo,300));
 */
@@ -186,17 +186,17 @@ int LecturaOperaciones(rac *RAC, ral *RAL)
                 if(codigoOperador == 2)
                 {
 
-               BajaRAC(RAC,aux);
+               BajaRAC(RAC,aux, &FlagAlta);
 
-              BajaRAL(RAL,aux);
+              BajaRAL(RAL,aux ,&FlagAlta);
 
                 }
 
             }
             else if (codigoOperador == 3)
             {
-                EvocarRAC(RAC,aux.codigo,&aux);
-                EvocarRAL(RAL,aux.codigo,&aux);
+                EvocarRAC(RAC,aux.codigo,&aux, &FlagAlta);
+                EvocarRAL(RAL,aux.codigo,&aux, &FlagAlta);
             }
             else
             {

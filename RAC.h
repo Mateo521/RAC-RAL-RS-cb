@@ -39,7 +39,7 @@ strcpy(RAC[i].envio.nombre_r, "");
 
 
 ///---------------------------------------------------------LOCALIZAR
-rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p){
+rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p, int FlagAlta){
 
 
 
@@ -85,12 +85,12 @@ rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p){
 }
 
 ///---------------------------------------------------------ALTA
-int AltaRAC(rac *RAC, Envio envio) {
+int AltaRAC(rac *RAC, Envio envio, int *FlagAlta) {
     int pos;
 
-    rloc aux = LocalizarRAC(RAC, envio.codigo, pos,0);
+    rloc aux = LocalizarRAC(RAC, envio.codigo, pos,0, &FlagAlta);
 
-    if (aux.exito || FlagAlta == 1) {
+    if (aux.exito || *FlagAlta == 1) {
         return 0; // Elemento ya existe o no se puede agregar
     } else {
 
@@ -105,9 +105,9 @@ int AltaRAC(rac *RAC, Envio envio) {
 }
 
 ///---------------------------------------------------------BAJA
-int BajaRAC(rac *RAC, Envio envio) {
+int BajaRAC(rac *RAC, Envio envio, int *FlagAlta) {
     int pos;
-    rloc aux = LocalizarRAC(RAC, envio.codigo, &pos, 0);
+    rloc aux = LocalizarRAC(RAC, envio.codigo, &pos, 0 , &FlagAlta );
 
     int opcion;
     if (aux.exito) {
@@ -121,7 +121,7 @@ int BajaRAC(rac *RAC, Envio envio) {
         scanf("%d", &opcion);
         fflush(stdin);
 
-        if (opcion == 1 && FlagAlta == 0) {
+        if (opcion == 1 && *FlagAlta == 0) {
             // Realiza la lógica de suprimir el artículo usando los campos reales de Envio
             strcpy(RAC[aux.lugar].envio.codigo, "nill");
             RAC[aux.lugar].envio.dni_receptor = 0;
@@ -135,7 +135,7 @@ int BajaRAC(rac *RAC, Envio envio) {
 
             RAC[aux.lugar].Flag = 1;
             return 1; // BAJA EXITOSA
-        } else if (FlagAlta == 1) {
+        } else if (*FlagAlta == 1) {
             return 2; // Error: No se puede dar de baja debido a FlagAlta
         } else {
             return 3; // BAJA CANCELADA
@@ -146,9 +146,9 @@ int BajaRAC(rac *RAC, Envio envio) {
 }
 
 ///---------------------------------------------------------EVOCAR
-int EvocarRAC(rac *RAC,char C[], Envio *envio){
+int EvocarRAC(rac *RAC,char C[], Envio *envio ,  int *FlagAlta){
     int pos;
-    rloc aux = LocalizarRAC(RAC, C, &pos, 0);
+    rloc aux = LocalizarRAC(RAC, C, &pos, 0,  &FlagAlta);
     if(aux.exito){
          (*envio)=RAC[aux.lugar].envio;
         return 1;///ARTICULO ENCONTRADO
@@ -171,7 +171,7 @@ void Muestra(Articulo A){
 }
 */
 void MostrarEnviosRAC(rac RAC[]) {
-    int i;
+    int i,contador=0;
     for (i = 0; i < MaxEnvios; i++) {
         switch (RAC[i].Flag) {
             case 0:
@@ -182,10 +182,12 @@ void MostrarEnviosRAC(rac RAC[]) {
                 break;
             case 2:
                 printf("\t\t POSICION [ %i ] OCUPADA\n", i);
+                contador ++;
                 mostrarenvio(RAC[i].envio); // Llama a la función para mostrar un envío
                 break;
         }
     }
+    printf("total de envios : %d\n", contador);
     system("pause");
 }
 
