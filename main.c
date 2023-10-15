@@ -45,7 +45,11 @@ initRAC(RAC);
 ral RAL[MaxEnvios];
 initRAL(RAL);
 
-   LecturaOperaciones(&RAC, &RAL);
+rs RS;
+initRS(&RS);
+
+
+   LecturaOperaciones(&RAC, &RAL, &RS);
 
     do
     {
@@ -99,7 +103,7 @@ initRAL(RAL);
                         case 3:
                             system("cls");
                             printf("Rebalse Separado (RS):\n");
-
+                            MostrarEnviosRS(&RS);
                             break;
                         case 4:
                             system("cls");
@@ -125,11 +129,11 @@ initRAL(RAL);
 
     return 0;
 }
-int LecturaOperaciones(rac *RAC, ral *RAL)
+int LecturaOperaciones(rac *RAC, ral *RAL, rs *RS)
 {
 
     // Declaraciones e inicializaciones
-    int respuesta = 2, alta=0,baja=0,evocar=0 ,FlagAlta = 0 ;
+    int FlagAlta = 0;
     Envio aux;
     FILE* fp;
 
@@ -175,28 +179,32 @@ int LecturaOperaciones(rac *RAC, ral *RAL)
                 // Llama a la funci n correspondiente para alta o baja en las estructuras
                 if(codigoOperador == 1)
                 {
-             AltaRAC(RAC,aux, &FlagAlta);
+
+                       ALTA(RS, aux);
+         //    AltaRAC(RAC,aux, &FlagAlta);
 
 
-                 AltaRAL(RAL,aux, &FlagAlta);
+         //  AltaRAL(RAL,aux, &FlagAlta);
 /*
                         printf("%d\n" , Hashing(aux.codigo,300));
 */
                 }
-                if(codigoOperador == 2)
+               else if(codigoOperador == 2)
                 {
 
-               BajaRAC(RAC,aux, &FlagAlta);
 
-              BajaRAL(RAL,aux ,&FlagAlta);
+
+          //     BajaRAC(RAC,aux, &FlagAlta);
+
+             // BajaRAL(RAL,aux ,&FlagAlta);
 
                 }
 
             }
             else if (codigoOperador == 3)
             {
-                EvocarRAC(RAC,aux.codigo,&aux, &FlagAlta);
-                EvocarRAL(RAL,aux.codigo,&aux, &FlagAlta);
+              //  EvocarRAC(RAC,aux.codigo,&aux, &FlagAlta);
+           //     EvocarRAL(RAL,aux.codigo,&aux, &FlagAlta);
             }
             else
             {

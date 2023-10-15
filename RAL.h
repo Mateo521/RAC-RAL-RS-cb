@@ -74,71 +74,44 @@ rloc LocalizarRAL(ral *RAL, char C[], int *pos, int p, int *FlagAlta){
 
 ///---------------------------------------------------------ALTA
 int AltaRAL(ral *RAL, Envio envio, int *FlagAlta) {
+
     int pos;
-
-
-
-    rloc aux = LocalizarRAC(RAL, envio.codigo, pos,0, &FlagAlta);
-
-    if (aux.exito || FlagAlta == 1) {
+    rloc aux = LocalizarRAL(RAL, envio.codigo, &pos,0, FlagAlta);
+    if (aux.exito || *FlagAlta == 1) {
         return 0; // Elemento ya existe o no se puede agregar
     } else {
 
-        // Si la función LocalizarRAC encontró un lugar disponible, puedes insertar el elemento C
-
         RAL[aux.lugar].envio = envio;
         RAL[aux.lugar].Flag = 2; // Marcar el casillero como OCUPADO
-        // Actualiza cualquier otro contador o información que necesites
-        // CantElmRAC++;
         return 1; // Elemento agregado con éxito
     }
 }
 
 ///---------------------------------------------------------BAJA
-int BajaRAL(ral *RAL, Envio envio, int *FlagAlta) {
+
+int BajaRAL(ral *RAL,Envio envio, int *FlagBaja) {
     int pos;
-    rloc aux = LocalizarRAL(RAL, envio.codigo, &pos, 0, &FlagAlta);
+    rloc aux = LocalizarRAL(RAL, envio.codigo, &pos, 0, FlagBaja);
 
-    int opcion;
-    if (aux.exito) {
-        printf("EL ARTICULO SE ENCUENTRA EN STOCK");
-        /*
-        Mostrador(RAC[aux.lugar]);
-        */
-        printf("ESTA SEGURO QUE DESEA SUPRIMIR ESTE ARTICULO?\n");
-        printf("1_ SI, ESTOY SEGURO \nCUALQUIER OTRO NUMERO PARA CANCELAR\n");
-        fflush(stdin);
-        scanf("%d", &opcion);
-        fflush(stdin);
+    if (aux.exito && *FlagBaja == 0) {
 
-        if (opcion == 1 && FlagAlta == 0) {
-            // Realiza la lógica de suprimir el artículo usando los campos reales de Envio
-            strcpy(RAL[aux.lugar].envio.codigo, "nill");
-            RAL[aux.lugar].envio.dni_receptor = 0;
-            // Establece otros campos de Envio según tu estructura real
-            strcpy(RAL[aux.lugar].envio.nombre, "nill");
-            strcpy(RAL[aux.lugar].envio.direccion, "nill");
-            RAL[aux.lugar].envio.dni_remitente = 0;
-            strcpy(RAL[aux.lugar].envio.nombre_r, "nill");
-            strcpy(RAL[aux.lugar].envio.fecha_envio, "nill");
-            strcpy(RAL[aux.lugar].envio.fecha_recepcion, "nill");
 
-            RAL[aux.lugar].Flag = 1;
-            return 1; // BAJA EXITOSA
-        } else if (FlagAlta == 1) {
-            return 2; // Error: No se puede dar de baja debido a FlagAlta
-        } else {
-            return 3; // BAJA CANCELADA
-        }
+        RAL[aux.lugar].Flag = 1; // Marcar el casillero como LIBRE
+        // Limpia o actualiza otros campos si es necesario
+        // RAL[aux.lugar].envio = ...;
+        return 1; // Baja exitosa
+    } else if (*FlagBaja == 1) {
+        return 2; // Error: No se puede dar de baja debido a FlagBaja
     } else {
-        return 0; // ELEMENTO NO ENCONTRADO
+        return 0; // Elemento no encontrado
     }
 }
+
 
 ///---------------------------------------------------------EVOCAR
 int EvocarRAL(ral *RAL,char C[], Envio *envio, int *FlagAlta){
     int pos;
-    rloc aux = LocalizarRAL(RAL, C, &pos, 0, &FlagAlta );
+    rloc aux = LocalizarRAL(RAL, C, &pos, 0, FlagAlta);
     if(aux.exito){
          (*envio)=RAL[aux.lugar].envio;
         return 1;///ARTICULO ENCONTRADO
@@ -160,18 +133,18 @@ void Muestra(Articulo A){
     printf("> PRECIO: %f\n", A.precio);
 }
 */
-void MostrarEnviosRAL(rac RAL[]) {
+void MostrarEnviosRAL(ral RAL[]) {
  int i,contador=0;
     for (i = 0; i < MaxEnvios; i++) {
         switch (RAL[i].Flag) {
             case 0:
-                printf("\t\t POSICION [ %i ] VIRGEN\n", i);
+                printf("POSICION [ %i ] VIRGEN\n", i);
                 break;
             case 1:
-                printf("\t\t POSICION [ %i ] LIBRE\n", i);
+                printf("POSICION [ %i ] LIBRE\n", i);
                 break;
             case 2:
-                printf("\t\t POSICION [ %i ] OCUPADA\n", i);
+                printf("POSICION [ %i ] OCUPADA\n", i);
                 contador++;
                 mostrarenvio(RAL[i].envio); // Llama a la función para mostrar un envío
                 break;

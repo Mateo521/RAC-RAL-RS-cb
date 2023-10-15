@@ -39,16 +39,14 @@ strcpy(RAC[i].envio.nombre_r, "");
 
 
 ///---------------------------------------------------------LOCALIZAR
-rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p, int FlagAlta){
-
-
-
+rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p, int *FlagAlta) {
     int H = Hashing(C, MaxEnvios);
     int i = 0, j = 1;
     int primerbaldelibre = -1; // Inicializado a un valor no válido
     int controldeprimerbaldelibre = 0;
     rloc aux;
- while (i < MaxEnvios && ((RAC[H].Flag != 0 && RAC[H].Flag != 1) || strcmp(RAC[H].envio.codigo, C) != 0)) {
+
+    while (i < MaxEnvios && ((RAC[H].Flag != 0 && RAC[H].Flag != 1) || strcmp(RAC[H].envio.codigo, C) != 0)) {
         if (controldeprimerbaldelibre == 0 && RAC[H].Flag == 1) {
             primerbaldelibre = H;
             controldeprimerbaldelibre = 1;
@@ -59,20 +57,17 @@ rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p, int FlagAlta){
     }
 
     if (RAC[H].Flag == 0) {
-
         if (controldeprimerbaldelibre == 1) {
             H = primerbaldelibre;
         }
-
         aux.exito = false;
     } else {
         if (i == MaxEnvios) {
             aux.exito = false;
             if (controldeprimerbaldelibre == 1) {
                 H = primerbaldelibre;
-            } else {
-                FlagAlta = 1;
             }
+            // No modifiques *FlagAlta aquí, ya que el código no se encontró.
         } else if (strcmp(RAC[H].envio.codigo, C) == 0) {
             aux.exito = true;
         }
@@ -80,22 +75,25 @@ rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p, int FlagAlta){
 
     aux.lugar = H;
 
+    // Si el código se encontró o si se cambió FlagAlta en la última parte, modifica *FlagAlta.
+    if (aux.exito || controldeprimerbaldelibre == 1) {
+        *FlagAlta = 1;
+    }
 
     return aux;
 }
+
 
 ///---------------------------------------------------------ALTA
 int AltaRAC(rac *RAC, Envio envio, int *FlagAlta) {
     int pos;
 
-    rloc aux = LocalizarRAC(RAC, envio.codigo, pos,0, &FlagAlta);
+    rloc aux = LocalizarRAC(RAC, envio.codigo, &pos, 0, FlagAlta); // Sin el &
 
     if (aux.exito || *FlagAlta == 1) {
         return 0; // Elemento ya existe o no se puede agregar
     } else {
-
         // Si la función LocalizarRAC encontró un lugar disponible, puedes insertar el elemento C
-
         RAC[aux.lugar].envio = envio;
         RAC[aux.lugar].Flag = 2; // Marcar el casillero como OCUPADO
         // Actualiza cualquier otro contador o información que necesites
@@ -104,10 +102,11 @@ int AltaRAC(rac *RAC, Envio envio, int *FlagAlta) {
     }
 }
 
+
 ///---------------------------------------------------------BAJA
 int BajaRAC(rac *RAC, Envio envio, int *FlagAlta) {
     int pos;
-    rloc aux = LocalizarRAC(RAC, envio.codigo, &pos, 0 , &FlagAlta );
+rloc aux = LocalizarRAC(RAC, envio.codigo, &pos, 0, FlagAlta); // Sin el &
 
     int opcion;
     if (aux.exito) {
@@ -148,7 +147,7 @@ int BajaRAC(rac *RAC, Envio envio, int *FlagAlta) {
 ///---------------------------------------------------------EVOCAR
 int EvocarRAC(rac *RAC,char C[], Envio *envio ,  int *FlagAlta){
     int pos;
-    rloc aux = LocalizarRAC(RAC, C, &pos, 0,  &FlagAlta);
+    rloc aux = LocalizarRAC(RAC, C, &pos, 0,  FlagAlta);
     if(aux.exito){
          (*envio)=RAC[aux.lugar].envio;
         return 1;///ARTICULO ENCONTRADO
