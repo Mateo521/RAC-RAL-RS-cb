@@ -41,21 +41,67 @@ void initRAL(ral *RAL)
 
 
 ///---------------------------------------------------------LOCALIZAR
+
+
+
+float CantEvocarExitosoRAL = 0.0;
+float CantEvocarFracasoRAL = 0.0;
+
+
+float EvocarExitosoMaximoRAL= 0.0;
+float EvocarFracasoMaximoRAL= 0.0;
+
+float temporal_ERAL=0.0;
+float temporal_FRAL=0.0;
 rloc LocalizarRAL(ral *RAL, char C[], int *pos, int p)
 {
+
+    float costoEvocarExitoso =0.0;
+     float costoEvocarFracaso =0.0;
+     float temp = 0.0;
     int H = Hashing(C, MaxEnvios);
     int i = 0;
     rloc aux;
 
     while (i < MaxEnvios) {
+            temp++;
         if (RAL[H].Flag == 2 && strcmp(RAL[H].envio.codigo, C) == 0) {
             aux.exito = 1;
             aux.lugar = H;
+
+
+                    if(p==1){
+ CantEvocarExitosoRAL++;
+                    if(EvocarExitosoMaximoRAL<temp){
+                        EvocarExitosoMaximoRAL = temp;
+                    }
+                    costoEvocarExitoso+=temp;
+
+                     temporal_ERAL+=costoEvocarExitoso;
+
+
+             }
+
             return aux;  // Encontramos el envío, marcamos éxito y su posición
         }
         else if (RAL[H].Flag == 0) {
             aux.exito = 0;
             aux.lugar = H;  // Encontramos una posición vacía, marcamos no éxito y su posición
+
+
+
+               if(p==1){
+                CantEvocarFracasoRAL++;
+                         if(EvocarFracasoMaximoRAL<temp){
+                        EvocarFracasoMaximoRAL = temp;
+                    }
+            costoEvocarFracaso+=temp;
+
+            temporal_FRAL+=costoEvocarFracaso;
+
+
+             }
+
             return aux;
         }
         H = (H + 1) % MaxEnvios;  // Avanzamos al siguiente índice
@@ -112,6 +158,7 @@ int BajaRAL(ral *RAL, Envio envio)
 
         return 0; // Baja no exitosa
     }
+    return 0;
 }
 
 
@@ -121,14 +168,14 @@ int BajaRAL(ral *RAL, Envio envio)
 int EvocarRAL(ral *RAL,char C[], Envio *envio)
 {
     int pos;
-    rloc aux = LocalizarRAL(RAL, C, &pos, 0);
+    rloc aux = LocalizarRAL(RAL, C, &pos, 1);
     if(aux.exito)
     {
         (*envio)=RAL[aux.lugar].envio;
-        return 1;///ARTICULO ENCONTRADO
+        return 1;
     }
     else
-        return 0;///ARTICULO NO ENCONTRADO
+        return 0;
 }
 ///---------------------------------------------------------MOSTRAR ESTRUCTURA
 

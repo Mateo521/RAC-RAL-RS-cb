@@ -10,7 +10,9 @@
 typedef struct {
     Envio envio;
     int Flag; // 0 VIRGEN 1 LIBRE 2 OCUPADA
+
 } rac;
+
 
 void initRAC(rac *RAC) {
 
@@ -34,19 +36,59 @@ strcpy(RAC[i].envio.nombre_r, "");
 
 
 ///---------------------------------------------------------LOCALIZAR
+
+float CantEvocarExitosoRAC = 0.0;
+float CantEvocarFracasoRAC = 0.0;
+
+
+float EvocarExitosoMaximoRAC= 0.0;
+float EvocarFracasoMaximoRAC= 0.0;
+
+float temporal_ERAC=0.0;
+float temporal_FRAC=0.0;
 rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p)
 {
+    float costoEvocarExitoso =0.0;
+     float costoEvocarFracaso =0.0;
+    float temp = 0.0;
+
     int H = Hashing(C, MaxEnvios);
     int i = 0,j=1;
     rloc aux;
 
     while (i < MaxEnvios) {
+             temp++;
         if (RAC[H].Flag == 2 && strcmp(RAC[H].envio.codigo, C) == 0) {
+
+
             aux.exito = 1;
+               if(p==1){
+            CantEvocarExitosoRAC++;
+                    if(EvocarExitosoMaximoRAC<temp){
+                        EvocarExitosoMaximoRAC = temp;
+                    }
+                    costoEvocarExitoso+=temp;
+
+                     temporal_ERAC+=costoEvocarExitoso;
+
+
+             }
             aux.lugar = H;
             return aux;  // Encontramos el envío, marcamos éxito y su posición
         }
         else if (RAC[H].Flag == 0) {
+  CantEvocarFracasoRAC++;
+                 if(p==1){
+
+                         if(EvocarFracasoMaximoRAC<temp){
+                        EvocarFracasoMaximoRAC = temp;
+                    }
+            costoEvocarFracaso+=temp;
+
+            temporal_FRAC+=costoEvocarFracaso;
+
+
+             }
             aux.exito = 0;
             aux.lugar = H;  // Encontramos una posición vacía, marcamos no éxito y su posición
             return aux;
@@ -54,7 +96,13 @@ rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p)
         H = (H + j * j) % MaxEnvios;  // Rebalse cuadrático abierto: Avanzamos cuadráticamente
         i++;
         j++;
+
+
+
+
+
     }
+
 
     aux.exito = 0;
     aux.lugar = -1;  // No se encontró el envío, marcamos no éxito y posición -1
@@ -111,14 +159,24 @@ rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p, int *FlagAlta) {
 
 
 ///---------------------------------------------------------ALTA
+
+
+
+
+
 int AltaRAC(rac *RAC, Envio envio) {
+
+
     int pos;
 
     rloc aux = LocalizarRAC(RAC, envio.codigo, &pos, 0); // Sin el &
 
     if (aux.exito) {
+
+
         return 0; // Elemento ya existe o no se puede agregar
     } else {
+
         // Si la función LocalizarRAC encontró un lugar disponible, puedes insertar el elemento C
         RAC[aux.lugar].envio = envio;
         RAC[aux.lugar].Flag = 2; // Marcar el casillero como OCUPADO
@@ -129,8 +187,12 @@ int AltaRAC(rac *RAC, Envio envio) {
 
 
 ///---------------------------------------------------------BAJA
+
+
+
 int BajaRAC(rac *RAC, Envio envio)
 {
+
     int pos;
     rloc aux = LocalizarRAC(RAC, envio.codigo, &pos, 0);
 
@@ -141,8 +203,6 @@ int BajaRAC(rac *RAC, Envio envio)
              && (strcmp(RAC[aux.lugar].envio.nombre, envio.nombre)==0) && (strcmp(RAC[aux.lugar].envio.nombre_r, envio.nombre_r)==0)
              ){
 
-
-
        RAC[aux.lugar].Flag = 1; // Marcar el casillero como LIBRE
         // Realiza cualquier otra operación necesaria, como liberar memoria si es aplicable
  return 1; // Baja exitosa
@@ -151,19 +211,28 @@ int BajaRAC(rac *RAC, Envio envio)
 
 
     } else {
+
         return 0; // Baja no exitosa
     }
+    return 0;
 }
 
 ///---------------------------------------------------------EVOCAR
+
+//float EvocarExitosoRAC = 0.0;
+//float EvocarFracasoRAC = 0.0;
 int EvocarRAC(rac *RAC,char C[], Envio *envio){
     int pos;
-    rloc aux = LocalizarRAC(RAC, C, &pos, 0);
+    rloc aux = LocalizarRAC(RAC, C, &pos, 1);
     if(aux.exito){
+   //         EvocarExitosoRAC++;
          (*envio)=RAC[aux.lugar].envio;
-        return 1;///ARTICULO ENCONTRADO
+        return 1;
     }else
-        return 0;///ARTICULO NO ENCONTRADO
+ //   EvocarFracasoRAC++;
+
+
+        return 0;
 }
 ///---------------------------------------------------------MOSTRAR ESTRUCTURA
 void MostrarEnviosRAC(rac RAC[]) {

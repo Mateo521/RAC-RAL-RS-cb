@@ -67,13 +67,15 @@ initRAL(RAL);
 
                 LecturaOperaciones(&RAC, &RAL, &RS);
 
-                printf("\n         AltaMax | AltaMed | BajaMax | BajaMed | Max.Ev.Ex | Med.Ev.Ex | Max.Ev.Fr | Med.Ev.Fr|\n");
-                 printf("   RAL::\n");
-                printf("-----------------------------------------------------------------------------------------------\n");
-                printf("   RAC::\n");
-                printf("-----------------------------------------------------------------------------------------------\n");
+                printf("\t Max.Ev.Ex | Med.Ev.Ex | Max.Ev.Fr | Med.Ev.Fr|\n");
+                   printf("   RAL::");
+                printf(" %0.2f |      %0.2f |       %0.2f |      %0.2f |\n", EvocarExitosoMaximoRAL,(temporal_ERAL/CantEvocarExitosoRAL), EvocarFracasoMaximoRAL , (temporal_FRAL/CantEvocarFracasoRAL) );
+                printf("-----------------------------------------------------------------\n");
+                printf("   RAC::");
+                printf(" %0.2f |      %0.2f |      %0.2f |        %0.2f |\n", EvocarExitosoMaximoRAC ,(temporal_ERAC/CantEvocarExitosoRAC), EvocarFracasoMaximoRAC , (temporal_FRAC/CantEvocarFracasoRAC) );
+                printf("-----------------------------------------------------------------\n");
                 printf("    RS::\n");
-                printf("-----------------------------------------------------------------------------------------------\n");
+                printf("------------------------------------------------------------------\n");
                     break;
             case 2:
 
