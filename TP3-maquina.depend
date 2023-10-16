@@ -53,7 +53,7 @@
 
 1697160555 c:\users\mateo\onedrive\escritorio\rac-ral-rs-cb\rs.h
 
-1697421135 source:c:\users\mateo\onedrive\escritorio\eda\rac-ral-rs-cb\main.c
+1697425033 source:c:\users\mateo\onedrive\escritorio\eda\rac-ral-rs-cb\main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -69,21 +69,21 @@
 	<string.h>
 	<ctype.h>
 
-1697422130 c:\users\mateo\onedrive\escritorio\eda\rac-ral-rs-cb\rac.h
+1697423017 c:\users\mateo\onedrive\escritorio\eda\rac-ral-rs-cb\rac.h
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
 	<string.h>
 	<ctype.h>
 
-1697400678 c:\users\mateo\onedrive\escritorio\eda\rac-ral-rs-cb\ral.h
+1697423309 c:\users\mateo\onedrive\escritorio\eda\rac-ral-rs-cb\ral.h
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
 	<string.h>
 	<ctype.h>
 
-1697421235 c:\users\mateo\onedrive\escritorio\eda\rac-ral-rs-cb\rs.h
+1697425028 c:\users\mateo\onedrive\escritorio\eda\rac-ral-rs-cb\rs.h
 	<stdbool.h>
 	"Envios.h"
 

@@ -69,6 +69,9 @@ rloc LocalizarRAL(ral *RAL, char C[], int *pos, int p, int *FlagAlta){
             aux.exito=true;
     }
     aux.lugar=H;
+
+
+
     return aux;
 }
 
@@ -93,9 +96,9 @@ int BajaRAL(ral *RAL,Envio envio, int *FlagBaja) {
     int pos;
     rloc aux = LocalizarRAL(RAL, envio.codigo, &pos, 0, FlagBaja);
 
-    if (aux.exito && *FlagBaja == 0) {
+    if (aux.exito==1) {
 
-
+        *FlagBaja = 0;
         RAL[aux.lugar].Flag = 1; // Marcar el casillero como LIBRE
         // Limpia o actualiza otros campos si es necesario
         // RAL[aux.lugar].envio = ...;

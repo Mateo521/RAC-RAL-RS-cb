@@ -107,11 +107,14 @@ int AltaRAC(rac *RAC, Envio envio, int *FlagAlta) {
 
 ///---------------------------------------------------------BAJA
 int BajaRAC(rac *RAC, Envio envio, int *FlagBaja) {
+
     int pos;
     rloc aux = LocalizarRAC(RAC, envio.codigo, &pos, 0, FlagBaja);
 
-    if (aux.exito && *FlagBaja == 0) {
-        RAC[aux.lugar].Flag = 1; // Marcar el casillero como LIBRE
+    if (aux.exito) {
+        RAC[aux.lugar].Flag = 1;
+        *FlagBaja = 0;
+        // Marcar el casillero como LIBRE
         // Limpia o actualiza otros campos si es necesario
         // RAC[aux.lugar].envio = ...;
         return 1; // Baja exitosa

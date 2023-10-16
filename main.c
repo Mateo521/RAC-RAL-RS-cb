@@ -133,7 +133,7 @@ int LecturaOperaciones(rac *RAC, ral *RAL, rs *RS)
 {
 
     // Declaraciones e inicializaciones
-    int FlagAlta = 0;
+    int FlagAlta = 0,FlagBaja=0, indice;
     Envio aux;
     FILE* fp;
 
@@ -190,20 +190,20 @@ int LecturaOperaciones(rac *RAC, ral *RAL, rs *RS)
                else if(codigoOperador == 2)
                 {
 
+              BajaRS(RS, aux);
 
+             // BajaRAC(RAC,aux, &FlagBaja);
 
-          //     BajaRAC(RAC,aux, &FlagAlta);
-
-             // BajaRAL(RAL,aux ,&FlagAlta);
+         // BajaRAL(RAL,aux ,&FlagBaja);
 
                 }
 
             }
             else if (codigoOperador == 3)
             {
-              //  EvocarRAC(RAC,aux.codigo,&aux, &FlagAlta);
-           //     EvocarRAL(RAL,aux.codigo,&aux, &FlagAlta);
-            }
+         //    EvocarRAC(RAC,aux.codigo,&aux, &FlagAlta);
+           //    EvocarRAL(RAL,aux.codigo,&aux, &FlagAlta);
+           }
             else
             {
                 // Maneja el caso de c digo de operaci n no reconocido

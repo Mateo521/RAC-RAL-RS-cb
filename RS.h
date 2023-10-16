@@ -32,17 +32,20 @@ void initRS(rs* RS) {
 
 
 // Función para verificar si un valor 'codigo' pertenece a la tabla hash con rebalse separado
-int LocalizarRS(struct Nodo* RS, char *codigo) {
+int LocalizarRS(rs *RS, char *codigo, int *indice) {
     struct Nodo* p = RS;
+    int i = 0;
 
     while (p != NULL) {
         if (strcmp(p->envio.codigo, codigo) == 0) {
-            return 1; // Se encontró el valor 'codigo'
+            *indice = i;  // Almacena el índice donde se encontró el valor 'codigo'
+            return 1;      // Se encontró el valor 'codigo'
         }
         p = p->siguiente;
+        i++;
     }
 
-    return 0; // El valor 'codigo' no se encontró en la lista vinculada
+    return 0;  // El valor 'codigo' no se encontró en la lista vinculada
 }
 
 
@@ -53,6 +56,9 @@ int LocalizarRS(struct Nodo* RS, char *codigo) {
 
 void AltaRS(rs* RS, Envio nuevoEnvio) {
     int indice = Hashing(nuevoEnvio.codigo, MaxEnvios);
+
+
+    if (LocalizarRS(RS, nuevoEnvio.codigo, indice) == 0) {
 
     // Verificar si la lista en esta celda está vacía
     if (RS->celdas[indice] == NULL) {
@@ -80,7 +86,45 @@ void AltaRS(rs* RS, Envio nuevoEnvio) {
         }
         p->siguiente = nuevoNodo;
     }
+    return 1;
+    }
+    else{
+        return 0;
+    }
 }
+
+
+
+int BajaRS(rs* RS, Envio envio) {
+    int indice;
+    if (LocalizarRS(RS, envio.codigo, &indice) == 1) {
+        struct Nodo* p = RS->celdas[indice];
+        struct Nodo* anterior = NULL;
+
+        while (p != NULL) {
+            if (strcmp(p->envio.codigo, envio.codigo) == 0) {
+                // Se encontró el envío, ahora lo eliminamos del RS
+                if (anterior == NULL) {
+                    // El envío estaba en la primera posición de la lista
+                    RS->celdas[indice] = p->siguiente;
+                } else {
+                    // El envío estaba en una posición diferente de la lista
+                    anterior->siguiente = p->siguiente;
+                }
+
+                free(p);  // Liberamos la memoria del nodo
+                return 1;  // Baja exitosa
+            }
+            anterior = p;
+            p = p->siguiente;
+        }
+    }
+    return 0;  // El envío no se encontró en la estructura RS
+}
+
+
+
+
 
 
 
