@@ -97,9 +97,17 @@ int BajaRAL(ral *RAL, Envio envio)
     if (aux.exito == 1) {
 
 
+              if ((strcmp(RAL[aux.lugar].envio.codigo, envio.codigo)==0) && (strcmp(RAL[aux.lugar].envio.direccion, envio.direccion)==0) && (RAL[aux.lugar].envio.dni_receptor == envio.dni_receptor) &&
+             (RAL[aux.lugar].envio.dni_remitente == envio.dni_remitente)&& (strcmp(RAL[aux.lugar].envio.fecha_envio, envio.fecha_envio)==0) && (strcmp(RAL[aux.lugar].envio.fecha_recepcion, envio.fecha_recepcion)==0)
+             && (strcmp(RAL[aux.lugar].envio.nombre, envio.nombre)==0) && (strcmp(RAL[aux.lugar].envio.nombre_r, envio.nombre_r)==0)
+             ){
+
        RAL[aux.lugar].Flag = 1; // Marcar el casillero como LIBRE
+ return 1; // Baja exitosa
+
+       }
         // Realiza cualquier otra operación necesaria, como liberar memoria si es aplicable
-        return 1; // Baja exitosa
+
     } else {
 
         return 0; // Baja no exitosa

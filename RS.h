@@ -106,7 +106,10 @@ int BajaRS(rs* RS, Envio envio) {
         struct Nodo* anterior = NULL;
 
         while (p != NULL) {
-            if (strcmp(p->envio.codigo, envio.codigo) == 0) {
+             if( (strcmp(p->envio.direccion , envio.direccion)==0) && (p->envio.dni_receptor == envio.dni_receptor)
+        && (p->envio.dni_remitente == envio.dni_remitente) && (strcmp(p->envio.fecha_envio,envio.fecha_envio)==0)
+        && (strcmp(p->envio.fecha_recepcion,envio.fecha_recepcion)==0) && (strcmp(p->envio.nombre,envio.nombre)==0)
+        && (strcmp(p->envio.nombre_r,envio.nombre_r)==0)) {
                 // Se encontró el envío, ahora lo eliminamos del RS
                 if (anterior == NULL) {
                     // El envío estaba en la primera posición de la lista

@@ -135,9 +135,21 @@ int BajaRAC(rac *RAC, Envio envio)
     rloc aux = LocalizarRAC(RAC, envio.codigo, &pos, 0);
 
     if (aux.exito == 1) {
+
+         if ((strcmp(RAC[aux.lugar].envio.codigo, envio.codigo)==0) && (strcmp(RAC[aux.lugar].envio.direccion, envio.direccion)==0) && (RAC[aux.lugar].envio.dni_receptor == envio.dni_receptor) &&
+             (RAC[aux.lugar].envio.dni_remitente == envio.dni_remitente)&& (strcmp(RAC[aux.lugar].envio.fecha_envio, envio.fecha_envio)==0) && (strcmp(RAC[aux.lugar].envio.fecha_recepcion, envio.fecha_recepcion)==0)
+             && (strcmp(RAC[aux.lugar].envio.nombre, envio.nombre)==0) && (strcmp(RAC[aux.lugar].envio.nombre_r, envio.nombre_r)==0)
+             ){
+
+
+
        RAC[aux.lugar].Flag = 1; // Marcar el casillero como LIBRE
         // Realiza cualquier otra operación necesaria, como liberar memoria si es aplicable
-        return 1; // Baja exitosa
+ return 1; // Baja exitosa
+      }
+
+
+
     } else {
         return 0; // Baja no exitosa
     }
