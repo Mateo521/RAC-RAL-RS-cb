@@ -42,14 +42,14 @@ int main()
 rac RAC[MaxEnvios];
 initRAC(RAC);
 
-ral RAL[MaxEnvios];
-initRAL(RAL);
 
 rs RS;
 initRS(&RS);
 
+ral RAL[MaxEnvios];
+initRAL(RAL);
 
-   LecturaOperaciones(&RAC, &RAL, &RS);
+
 
     do
     {
@@ -65,7 +65,7 @@ initRS(&RS);
             case 1:
                 system("cls");
 
-
+                LecturaOperaciones(&RAC, &RAL, &RS);
 
                 printf("\n         AltaMax | AltaMed | BajaMax | BajaMed | Max.Ev.Ex | Med.Ev.Ex | Max.Ev.Fr | Med.Ev.Fr|\n");
                  printf("   RAL::\n");
@@ -133,7 +133,7 @@ int LecturaOperaciones(rac *RAC, ral *RAL, rs *RS)
 {
 
     // Declaraciones e inicializaciones
-    int FlagAlta = 0,FlagBaja=0, indice;
+    int FlagAlta = 0, FlagAlta1=0,FlagBaja=0,FlagBaja1=0, indice;
     Envio aux;
     FILE* fp;
 
@@ -145,19 +145,19 @@ int LecturaOperaciones(rac *RAC, ral *RAL, rs *RS)
     else
     {
         int codigoOperador=0, contadorEnvios=0,i;
-        while (!(feof(fp))&&contadorEnvios<=MAX_Envios)
+        while (!(feof(fp)))
         {
 
 
+
             fscanf(fp, "%d", &codigoOperador);
+
             fscanf(fp, " %[^\n]", aux.codigo);
              for(i=0;i<=8;i++){
                 aux.codigo[i]=toupper(aux.codigo[i]);
             }
             if (codigoOperador == 1 || codigoOperador == 2)
             {
-
-                // Leer y procesar los datos para Alta o Baja
                 fscanf(fp, "%d", &aux.dni_receptor);
 
                 fscanf(fp, " %[^\n]", aux.nombre);
@@ -175,14 +175,16 @@ int LecturaOperaciones(rac *RAC, ral *RAL, rs *RS)
             }
                 fscanf(fp, " %[^\n]", aux.fecha_envio);
                 fscanf(fp, " %[^\n]", aux.fecha_recepcion);
-
-                // Llama a la funci n correspondiente para alta o baja en las estructuras
                 if(codigoOperador == 1)
                 {
 
+
+          //     printf("ALTA: %s\n", aux.codigo);
+
                        AltaRS(RS, aux);
-                        AltaRAC(RAC,aux, &FlagAlta);
-                        AltaRAL(RAL,aux, &FlagAlta);
+                      AltaRAC(RAC,aux, &FlagAlta1);
+
+                       AltaRAL(RAL,aux, &FlagAlta);
 /*
                         printf("%d\n" , Hashing(aux.codigo,300));
 */
@@ -190,11 +192,14 @@ int LecturaOperaciones(rac *RAC, ral *RAL, rs *RS)
                else if(codigoOperador == 2)
                 {
 
-              BajaRS(RS, aux);
 
-             // BajaRAC(RAC,aux, &FlagBaja);
+             //   printf("BAJA: %s\n", aux.codigo);
 
-         // BajaRAL(RAL,aux ,&FlagBaja);
+            BajaRS(RS, aux); //funciono
+
+    BajaRAC(RAC,aux, &FlagBaja1); // no funciona
+
+    BajaRAL(RAL,aux ,&FlagBaja); // no funciona
 
                 }
 

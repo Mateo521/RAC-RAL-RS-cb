@@ -39,6 +39,35 @@ strcpy(RAC[i].envio.nombre_r, "");
 
 
 ///---------------------------------------------------------LOCALIZAR
+rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p, int *FlagAlta)
+{
+    int H = Hashing(C, MaxEnvios);
+    int i = 0,j=1;
+    rloc aux;
+
+    while (i < MaxEnvios) {
+        if (RAC[H].Flag == 2 && strcmp(RAC[H].envio.codigo, C) == 0) {
+            aux.exito = 1;
+            aux.lugar = H;
+            return aux;  // Encontramos el envío, marcamos éxito y su posición
+        }
+        else if (RAC[H].Flag == 0) {
+            aux.exito = 0;
+            aux.lugar = H;  // Encontramos una posición vacía, marcamos no éxito y su posición
+            return aux;
+        }
+        H = (H + j * j) % MaxEnvios;  // Rebalse cuadrático abierto: Avanzamos cuadráticamente
+        i++;
+        j++;
+    }
+
+    aux.exito = 0;
+    aux.lugar = -1;  // No se encontró el envío, marcamos no éxito y posición -1
+    return aux;
+}
+
+
+/*
 rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p, int *FlagAlta) {
     int H = Hashing(C, MaxEnvios);
     int i = 0;
@@ -83,8 +112,7 @@ rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p, int *FlagAlta) {
 
     return aux;
 }
-
-
+*/
 
 
 ///---------------------------------------------------------ALTA
@@ -106,25 +134,19 @@ int AltaRAC(rac *RAC, Envio envio, int *FlagAlta) {
 
 
 ///---------------------------------------------------------BAJA
-int BajaRAC(rac *RAC, Envio envio, int *FlagBaja) {
-
+int BajaRAC(rac *RAC, Envio envio, int *FlagBaja)
+{
     int pos;
     rloc aux = LocalizarRAC(RAC, envio.codigo, &pos, 0, FlagBaja);
 
-    if (aux.exito) {
-        RAC[aux.lugar].Flag = 1;
-        *FlagBaja = 0;
-        // Marcar el casillero como LIBRE
-        // Limpia o actualiza otros campos si es necesario
-        // RAC[aux.lugar].envio = ...;
+    if (aux.exito == 1) {
+       RAC[aux.lugar].Flag = 1; // Marcar el casillero como LIBRE
+        // Realiza cualquier otra operación necesaria, como liberar memoria si es aplicable
         return 1; // Baja exitosa
-    } else if (*FlagBaja == 1) {
-        return 2; // Error: No se puede dar de baja debido a FlagBaja
     } else {
-        return 0; // Elemento no encontrado
+        return 0; // Baja no exitosa
     }
 }
-
 
 ///---------------------------------------------------------EVOCAR
 int EvocarRAC(rac *RAC,char C[], Envio *envio ,  int *FlagAlta){
