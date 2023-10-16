@@ -180,11 +180,9 @@ int LecturaOperaciones(rac *RAC, ral *RAL, rs *RS)
                 if(codigoOperador == 1)
                 {
 
-                       ALTA(RS, aux);
-         //    AltaRAC(RAC,aux, &FlagAlta);
-
-
-         //  AltaRAL(RAL,aux, &FlagAlta);
+                       AltaRS(RS, aux);
+                        AltaRAC(RAC,aux, &FlagAlta);
+                        AltaRAL(RAL,aux, &FlagAlta);
 /*
                         printf("%d\n" , Hashing(aux.codigo,300));
 */

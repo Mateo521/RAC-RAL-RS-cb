@@ -51,7 +51,7 @@ int LocalizarRS(struct Nodo* RS, char *codigo) {
 
 
 
-void ALTA(rs* RS, Envio nuevoEnvio) {
+void AltaRS(rs* RS, Envio nuevoEnvio) {
     int indice = Hashing(nuevoEnvio.codigo, MaxEnvios);
 
     // Verificar si la lista en esta celda está vacía
@@ -85,15 +85,20 @@ void ALTA(rs* RS, Envio nuevoEnvio) {
 
 
 void MostrarEnviosRS(rs* RS) {
+    int contadorEnvios = 0;
+
     for (int i = 0; i < MaxEnvios; i++) {
         struct Nodo* p = RS->celdas[i];
         printf("Celda %d:\n", i);
         while (p != NULL) {
-           mostrarenvio(p->envio);
+            mostrarenvio(p->envio);
+            contadorEnvios++;
+
             p = p->siguiente;
         }
     }
-}
 
+    printf("Cantidad de envios: %d\n", contadorEnvios);
+}
 
 #endif // RS_H_INCLUDED

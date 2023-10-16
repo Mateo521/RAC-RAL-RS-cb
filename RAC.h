@@ -41,17 +41,18 @@ strcpy(RAC[i].envio.nombre_r, "");
 ///---------------------------------------------------------LOCALIZAR
 rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p, int *FlagAlta) {
     int H = Hashing(C, MaxEnvios);
-    int i = 0, j = 1;
-    int primerbaldelibre = -1; // Inicializado a un valor no válido
+    int i = 0;
+    int primerbaldelibre = -1;
     int controldeprimerbaldelibre = 0;
+    int j = 1; // Inicializar j en 1 (se incrementará cuadráticamente)
     rloc aux;
 
-    while (i < MaxEnvios && ((RAC[H].Flag != 0 && RAC[H].Flag != 1) || strcmp(RAC[H].envio.codigo, C) != 0)) {
+    while (i < MaxEnvios && RAC[H].Flag != 0 && (strcmp(RAC[H].envio.codigo, C) != 0)) {
         if (controldeprimerbaldelibre == 0 && RAC[H].Flag == 1) {
             primerbaldelibre = H;
             controldeprimerbaldelibre = 1;
         }
-        H = (H + j) % MaxEnvios;
+        H = (H + j * j) % MaxEnvios; // Incremento cuadrático
         i++;
         j++;
     }
@@ -84,6 +85,8 @@ rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p, int *FlagAlta) {
 }
 
 
+
+
 ///---------------------------------------------------------ALTA
 int AltaRAC(rac *RAC, Envio envio, int *FlagAlta) {
     int pos;
@@ -97,52 +100,28 @@ int AltaRAC(rac *RAC, Envio envio, int *FlagAlta) {
         RAC[aux.lugar].envio = envio;
         RAC[aux.lugar].Flag = 2; // Marcar el casillero como OCUPADO
         // Actualiza cualquier otro contador o información que necesites
-        // CantElmRAC++;
         return 1; // Elemento agregado con éxito
     }
 }
 
 
 ///---------------------------------------------------------BAJA
-int BajaRAC(rac *RAC, Envio envio, int *FlagAlta) {
+int BajaRAC(rac *RAC, Envio envio, int *FlagBaja) {
     int pos;
-rloc aux = LocalizarRAC(RAC, envio.codigo, &pos, 0, FlagAlta); // Sin el &
+    rloc aux = LocalizarRAC(RAC, envio.codigo, &pos, 0, FlagBaja);
 
-    int opcion;
-    if (aux.exito) {
-        printf("EL ARTICULO SE ENCUENTRA EN STOCK");
-        /*
-        Mostrador(RAC[aux.lugar]);
-        */
-        printf("ESTA SEGURO QUE DESEA SUPRIMIR ESTE ARTICULO?\n");
-        printf("1_ SI, ESTOY SEGURO \nCUALQUIER OTRO NUMERO PARA CANCELAR\n");
-        fflush(stdin);
-        scanf("%d", &opcion);
-        fflush(stdin);
-
-        if (opcion == 1 && *FlagAlta == 0) {
-            // Realiza la lógica de suprimir el artículo usando los campos reales de Envio
-            strcpy(RAC[aux.lugar].envio.codigo, "nill");
-            RAC[aux.lugar].envio.dni_receptor = 0;
-            // Establece otros campos de Envio según tu estructura real
-            strcpy(RAC[aux.lugar].envio.nombre, "nill");
-            strcpy(RAC[aux.lugar].envio.direccion, "nill");
-            RAC[aux.lugar].envio.dni_remitente = 0;
-            strcpy(RAC[aux.lugar].envio.nombre_r, "nill");
-            strcpy(RAC[aux.lugar].envio.fecha_envio, "nill");
-            strcpy(RAC[aux.lugar].envio.fecha_recepcion, "nill");
-
-            RAC[aux.lugar].Flag = 1;
-            return 1; // BAJA EXITOSA
-        } else if (*FlagAlta == 1) {
-            return 2; // Error: No se puede dar de baja debido a FlagAlta
-        } else {
-            return 3; // BAJA CANCELADA
-        }
+    if (aux.exito && *FlagBaja == 0) {
+        RAC[aux.lugar].Flag = 1; // Marcar el casillero como LIBRE
+        // Limpia o actualiza otros campos si es necesario
+        // RAC[aux.lugar].envio = ...;
+        return 1; // Baja exitosa
+    } else if (*FlagBaja == 1) {
+        return 2; // Error: No se puede dar de baja debido a FlagBaja
     } else {
-        return 0; // ELEMENTO NO ENCONTRADO
+        return 0; // Elemento no encontrado
     }
 }
+
 
 ///---------------------------------------------------------EVOCAR
 int EvocarRAC(rac *RAC,char C[], Envio *envio ,  int *FlagAlta){
