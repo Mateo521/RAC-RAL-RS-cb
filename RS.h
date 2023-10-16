@@ -96,11 +96,10 @@ void AltaRS(rs* RS, Envio nuevoEnvio) {
 
 
 int BajaRS(rs* RS, Envio envio) {
-    int indice;
-    if (LocalizarRS(RS, envio.codigo, &indice) == 1) {
+   int indice = Hashing(envio.codigo, MaxEnvios);
+    if (LocalizarRS(RS, envio.codigo, &indice) == 0) {
         struct Nodo* p = RS->celdas[indice];
         struct Nodo* anterior = NULL;
-
         while (p != NULL) {
             if (strcmp(p->envio.codigo, envio.codigo) == 0) {
                 // Se encontró el envío, ahora lo eliminamos del RS
@@ -121,6 +120,7 @@ int BajaRS(rs* RS, Envio envio) {
     }
     return 0;  // El envío no se encontró en la estructura RS
 }
+
 
 
 
