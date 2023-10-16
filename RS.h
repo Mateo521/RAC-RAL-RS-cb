@@ -10,14 +10,9 @@ typedef struct Nodo {
     Envio envio;
     struct Nodo* siguiente;
 } nodo;
-// Define la estructura de la tabla hash
-// Definición del tamaño de la tabla hash
-// TablaHash.h
-
-
 typedef struct Rebalse_Separado {
     struct Nodo* celdas[MaxEnvios];
-} rs;  // Define un alias "rs" para la estructura TablaHash
+} rs;
 
 
 
@@ -32,20 +27,24 @@ void initRS(rs* RS) {
 
 
 // Función para verificar si un valor 'codigo' pertenece a la tabla hash con rebalse separado
-int LocalizarRS(rs *RS, char *codigo, int *indice) {
-    struct Nodo* p = RS;
+int LocalizarRS(rs *RS, char *codigo, int *indice, int ev) {
     int i = 0;
 
-    while (p != NULL) {
-        if (strcmp(p->envio.codigo, codigo) == 0) {
-            *indice = i;  // Almacena el índice donde se encontró el valor 'codigo'
-            return 1;      // Se encontró el valor 'codigo'
+    // Recorres las celdas del arreglo RS->celdas
+    for (i = 0; i < MaxEnvios; i++) {
+        struct Nodo* p = RS->celdas[i];
+
+        // Recorres los nodos en la celda actual
+        while (p != NULL) {
+            if (strcmp(p->envio.codigo, codigo) == 0) {
+                *indice = i;  // Almacena el índice de la celda donde se encontró el valor 'codigo'
+                return 1;      // Se encontró el valor 'codigo'
+            }
+            p = p->siguiente;
         }
-        p = p->siguiente;
-        i++;
     }
 
-    return 0;  // El valor 'codigo' no se encontró en la lista vinculada
+    return 0;  // El valor 'codigo' no se encontró en ninguna de las celdas
 }
 
 
@@ -54,11 +53,12 @@ int LocalizarRS(rs *RS, char *codigo, int *indice) {
 
 
 
-void AltaRS(rs* RS, Envio nuevoEnvio) {
+
+int AltaRS(rs* RS, Envio nuevoEnvio) {
     int indice = Hashing(nuevoEnvio.codigo, MaxEnvios);
 
 
-    if (LocalizarRS(RS, nuevoEnvio.codigo, indice) == 0) {
+    if (LocalizarRS(RS, nuevoEnvio.codigo, &indice,0) == 0) {
 
     // Verificar si la lista en esta celda está vacía
     if (RS->celdas[indice] == NULL) {
@@ -72,7 +72,7 @@ void AltaRS(rs* RS, Envio nuevoEnvio) {
         struct Nodo* p = RS->celdas[indice];
         while (p != NULL) {
             if (strcmp(p->envio.codigo, nuevoEnvio.codigo) == 0) {
-                return;  // El elemento ya existe, no se puede dar de alta nuevamente
+                return 1;  // El elemento ya existe, no se puede dar de alta nuevamente
             }
             p = p->siguiente;
         }
@@ -96,10 +96,15 @@ void AltaRS(rs* RS, Envio nuevoEnvio) {
 
 
 int BajaRS(rs* RS, Envio envio) {
-   int indice = Hashing(envio.codigo, MaxEnvios);
-    if (LocalizarRS(RS, envio.codigo, &indice) == 0) {
+    int indice = Hashing(envio.codigo, MaxEnvios);
+
+    // Utiliza el nuevo LocalizarRS
+    int encontrado = LocalizarRS(RS, envio.codigo, &indice, 0);
+
+    if (encontrado) {
         struct Nodo* p = RS->celdas[indice];
         struct Nodo* anterior = NULL;
+
         while (p != NULL) {
             if (strcmp(p->envio.codigo, envio.codigo) == 0) {
                 // Se encontró el envío, ahora lo eliminamos del RS
@@ -118,10 +123,9 @@ int BajaRS(rs* RS, Envio envio) {
             p = p->siguiente;
         }
     }
+
     return 0;  // El envío no se encontró en la estructura RS
 }
-
-
 
 
 
@@ -144,5 +148,26 @@ void MostrarEnviosRS(rs* RS) {
 
     printf("Cantidad de envios: %d\n", contadorEnvios);
 }
+
+
+int EvocarRS(rs* RS, char C[], Envio *envio) {
+    int indice = Hashing(C, MaxEnvios);
+    if (LocalizarRS(RS, C, &indice, 1) == 0) {
+        struct Nodo* p = RS->celdas[indice];
+        while (p != NULL) {
+            if (strcmp(p->envio.codigo, C) == 0) {
+                (*envio) = p->envio;
+
+                return 1;  // Elemento encontrado en los rebalses separados
+            }
+            p = p->siguiente;
+        }
+        return 0;  // El código no se encontró en el rebalse separado
+    } else {
+        return 0;  // El código no se encontró en la tabla hash
+    }
+}
+
+
 
 #endif // RS_H_INCLUDED

@@ -7,16 +7,11 @@
 #include <ctype.h>
 #define MaxEnvios 300
 
-///---------------------------------------------------------ESTRUCTURAS
 typedef struct {
     Envio envio;
     int Flag; // 0 VIRGEN 1 LIBRE 2 OCUPADA
 } rac;
 
-
-
-
-// ---------------------------------------------------------RAC
 void initRAC(rac *RAC) {
 
     for (int i = 0; i < MaxEnvios; i++) {
@@ -39,7 +34,7 @@ strcpy(RAC[i].envio.nombre_r, "");
 
 
 ///---------------------------------------------------------LOCALIZAR
-rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p, int *FlagAlta)
+rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p)
 {
     int H = Hashing(C, MaxEnvios);
     int i = 0,j=1;
@@ -116,12 +111,12 @@ rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p, int *FlagAlta) {
 
 
 ///---------------------------------------------------------ALTA
-int AltaRAC(rac *RAC, Envio envio, int *FlagAlta) {
+int AltaRAC(rac *RAC, Envio envio) {
     int pos;
 
-    rloc aux = LocalizarRAC(RAC, envio.codigo, &pos, 0, FlagAlta); // Sin el &
+    rloc aux = LocalizarRAC(RAC, envio.codigo, &pos, 0); // Sin el &
 
-    if (aux.exito || *FlagAlta == 1) {
+    if (aux.exito) {
         return 0; // Elemento ya existe o no se puede agregar
     } else {
         // Si la función LocalizarRAC encontró un lugar disponible, puedes insertar el elemento C
@@ -134,10 +129,10 @@ int AltaRAC(rac *RAC, Envio envio, int *FlagAlta) {
 
 
 ///---------------------------------------------------------BAJA
-int BajaRAC(rac *RAC, Envio envio, int *FlagBaja)
+int BajaRAC(rac *RAC, Envio envio)
 {
     int pos;
-    rloc aux = LocalizarRAC(RAC, envio.codigo, &pos, 0, FlagBaja);
+    rloc aux = LocalizarRAC(RAC, envio.codigo, &pos, 0);
 
     if (aux.exito == 1) {
        RAC[aux.lugar].Flag = 1; // Marcar el casillero como LIBRE
@@ -149,9 +144,9 @@ int BajaRAC(rac *RAC, Envio envio, int *FlagBaja)
 }
 
 ///---------------------------------------------------------EVOCAR
-int EvocarRAC(rac *RAC,char C[], Envio *envio ,  int *FlagAlta){
+int EvocarRAC(rac *RAC,char C[], Envio *envio){
     int pos;
-    rloc aux = LocalizarRAC(RAC, C, &pos, 0,  FlagAlta);
+    rloc aux = LocalizarRAC(RAC, C, &pos, 0);
     if(aux.exito){
          (*envio)=RAC[aux.lugar].envio;
         return 1;///ARTICULO ENCONTRADO
@@ -159,20 +154,6 @@ int EvocarRAC(rac *RAC,char C[], Envio *envio ,  int *FlagAlta){
         return 0;///ARTICULO NO ENCONTRADO
 }
 ///---------------------------------------------------------MOSTRAR ESTRUCTURA
-/*
-void Muestra(Articulo A){
-    printf("\t-------------------------------------------------------------------------------------\n\n"
-           "\t    >>>>>>>>>>>                       DATOS:                       <<<<<<<<<<<\n\n"
-           "\t-------------------------------------------------------------------------------------\n\n");
-
-    printf("> CODIGO: %s\n", A.codigo);
-    printf("> TIPO: %s\n", A.tipo);
-    printf("> MARCA: %s\n", A.marca);
-    printf("> DESCRIPCION: %s\n", A.Descripcion);
-    printf("> CANTIDAD: %d\n", A.Cantidad);
-    printf("> PRECIO: %f\n", A.precio);
-}
-*/
 void MostrarEnviosRAC(rac RAC[]) {
     int i,contador=0;
     for (i = 0; i < MaxEnvios; i++) {

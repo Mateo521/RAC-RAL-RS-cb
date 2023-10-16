@@ -133,7 +133,7 @@ int LecturaOperaciones(rac *RAC, ral *RAL, rs *RS)
 {
 
     // Declaraciones e inicializaciones
-    int FlagAlta = 0, FlagAlta1=0,FlagBaja=0,FlagBaja1=0, indice;
+
     Envio aux;
     FILE* fp;
 
@@ -144,7 +144,7 @@ int LecturaOperaciones(rac *RAC, ral *RAL, rs *RS)
     }
     else
     {
-        int codigoOperador=0, contadorEnvios=0,i;
+        int codigoOperador=0,i;
         while (!(feof(fp)))
         {
 
@@ -182,9 +182,8 @@ int LecturaOperaciones(rac *RAC, ral *RAL, rs *RS)
           //     printf("ALTA: %s\n", aux.codigo);
 
                        AltaRS(RS, aux);
-                      AltaRAC(RAC,aux, &FlagAlta1);
-
-                       AltaRAL(RAL,aux, &FlagAlta);
+                       AltaRAC(RAC,aux);
+                       AltaRAL(RAL,aux);
 /*
                         printf("%d\n" , Hashing(aux.codigo,300));
 */
@@ -197,17 +196,20 @@ int LecturaOperaciones(rac *RAC, ral *RAL, rs *RS)
 
             BajaRS(RS, aux); //funciono
 
-    BajaRAC(RAC,aux, &FlagBaja1); // no funciona
+    BajaRAC(RAC,aux); // no funciona
 
-    BajaRAL(RAL,aux ,&FlagBaja); // no funciona
+    BajaRAL(RAL,aux); // no funciona
 
                 }
 
             }
             else if (codigoOperador == 3)
             {
-         //    EvocarRAC(RAC,aux.codigo,&aux, &FlagAlta);
-           //    EvocarRAL(RAL,aux.codigo,&aux, &FlagAlta);
+               EvocarRAC(RAC,aux.codigo,&aux);
+               EvocarRAL(RAL,aux.codigo,&aux);
+
+               EvocarRS(RS, aux.codigo, &aux);
+
            }
             else
             {

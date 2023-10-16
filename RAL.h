@@ -41,7 +41,7 @@ void initRAL(ral *RAL)
 
 
 ///---------------------------------------------------------LOCALIZAR
-rloc LocalizarRAL(ral *RAL, char C[], int *pos, int p, int *FlagAlta)
+rloc LocalizarRAL(ral *RAL, char C[], int *pos, int p)
 {
     int H = Hashing(C, MaxEnvios);
     int i = 0;
@@ -69,11 +69,11 @@ rloc LocalizarRAL(ral *RAL, char C[], int *pos, int p, int *FlagAlta)
 
 
 ///---------------------------------------------------------ALTA
-int AltaRAL(ral *RAL, Envio envio, int *FlagAlta) {
+int AltaRAL(ral *RAL, Envio envio) {
 
     int pos;
-    rloc aux = LocalizarRAL(RAL, envio.codigo, &pos, 0, FlagAlta);
-    if (aux.exito || *FlagAlta == 1) {
+    rloc aux = LocalizarRAL(RAL, envio.codigo, &pos, 0);
+    if (aux.exito) {
         return 0; // Elemento ya existe o no se puede agregar
     } else {
         if (aux.lugar >= 0 && aux.lugar < MaxEnvios) {
@@ -89,10 +89,10 @@ int AltaRAL(ral *RAL, Envio envio, int *FlagAlta) {
 }
 ///---------------------------------------------------------BAJA
 
-int BajaRAL(ral *RAL, Envio envio, int *FlagBaja)
+int BajaRAL(ral *RAL, Envio envio)
 {
     int pos;
-    rloc aux = LocalizarRAL(RAL, envio.codigo, &pos, 0, FlagBaja);
+    rloc aux = LocalizarRAL(RAL, envio.codigo, &pos, 0);
 
     if (aux.exito == 1) {
 
@@ -110,10 +110,10 @@ int BajaRAL(ral *RAL, Envio envio, int *FlagBaja)
 
 
 ///---------------------------------------------------------EVOCAR
-int EvocarRAL(ral *RAL,char C[], Envio *envio, int *FlagAlta)
+int EvocarRAL(ral *RAL,char C[], Envio *envio)
 {
     int pos;
-    rloc aux = LocalizarRAL(RAL, C, &pos, 0, FlagAlta);
+    rloc aux = LocalizarRAL(RAL, C, &pos, 0);
     if(aux.exito)
     {
         (*envio)=RAL[aux.lugar].envio;
