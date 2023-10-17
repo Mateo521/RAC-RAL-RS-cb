@@ -185,9 +185,9 @@ int LecturaOperaciones(rac *RAC, ral *RAL, rs *RS)
 
           //     printf("ALTA: %s\n", aux.codigo);
 
-                //      AltaRS(RS, aux);
-                   //    AltaRAC(RAC,aux);
+                     AltaRAC(RAC,aux);
                      AltaRAL(RAL,aux);
+                    AltaRS(RS, aux);
 /*
                         printf("%d\n" , Hashing(aux.codigo,300));
 */
@@ -197,12 +197,12 @@ int LecturaOperaciones(rac *RAC, ral *RAL, rs *RS)
 
 
 
-    //  BajaRS(RS, aux); //funciono
 
-       // BajaRAC(RAC,aux); // no funciona
+
+        BajaRAC(RAC,aux); // no funciona
 
        BajaRAL(RAL,aux);
-
+                    BajaRS(RS, aux); //funciono
                 }
 
             }

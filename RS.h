@@ -1,11 +1,11 @@
 #ifndef RS_H_INCLUDED
 #define RS_H_INCLUDED
-#define MaxEnviosRS 60
+#define MaxEnviosRS 300
 
 #include <stdbool.h>
 #include "Envios.h"
 
-// Definición de la estructura Nodo
+// Definiciï¿½n de la estructura Nodo
 typedef struct Nodo {
     Envio envio;
     struct Nodo* siguiente;
@@ -23,7 +23,7 @@ void initRS(rs* RS) {
 }
 
 
-// Función hash
+// Funciï¿½n hash
 
 
 
@@ -37,7 +37,7 @@ float EvocarFracasoMaximoRS= 0.0;
 float temporal_ERS=0.0;
 float temporal_FRS=0.0;
 
-// Función para verificar si un valor 'codigo' pertenece a la tabla hash con rebalse separado
+// Funciï¿½n para verificar si un valor 'codigo' pertenece a la tabla hash con rebalse separado
 int LocalizarRS(rs *RS, char *codigo, int *indice, int ev) {
      float costoEvocarExitoso =0.0;
      float costoEvocarFracaso =0.0;
@@ -50,7 +50,7 @@ int LocalizarRS(rs *RS, char *codigo, int *indice, int ev) {
         // Recorres los nodos en la celda actual
         while (p != NULL) {
             if (strcmp(p->envio.codigo, codigo) == 0) {
-                *indice = i;  // Almacena el índice de la celda donde se encontró el valor 'codigo'
+                *indice = i;  // Almacena el ï¿½ndice de la celda donde se encontrï¿½ el valor 'codigo'
                   if(ev==1){
                     CantEvocarExitosoRS++;
                     if(EvocarExitosoMaximoRS<temp){
@@ -59,7 +59,7 @@ int LocalizarRS(rs *RS, char *codigo, int *indice, int ev) {
                     costoEvocarExitoso+=temp;
                      temporal_ERS+=costoEvocarExitoso;
              }
-                return 1;      // Se encontró el valor 'codigo'
+                return 1;      // Se encontrï¿½ el valor 'codigo'
             } else {
                 p = p->siguiente;
                  if(ev==1){
@@ -74,7 +74,7 @@ int LocalizarRS(rs *RS, char *codigo, int *indice, int ev) {
         }
 
     }
-    return 0;  // El valor 'codigo' no se encontró en ninguna de las celdas
+    return 0;  // El valor 'codigo' no se encontrï¿½ en ninguna de las celdas
 }
 
 
@@ -91,15 +91,15 @@ int AltaRS(rs* RS, Envio nuevoEnvio) {
 
     if (LocalizarRS(RS, nuevoEnvio.codigo, &indice,0) == 0) {
 
-    // Verificar si la lista en esta celda está vacía
+    // Verificar si la lista en esta celda estï¿½ vacï¿½a
     if (RS->celdas[indice] == NULL) {
-        // La lista está vacía, creamos un nuevo nodo y lo asignamos como cabeza de la lista
+        // La lista estï¿½ vacï¿½a, creamos un nuevo nodo y lo asignamos como cabeza de la lista
         struct Nodo* nuevoNodo = malloc(sizeof(struct Nodo));
         nuevoNodo->envio = nuevoEnvio;
         nuevoNodo->siguiente = NULL;
         RS->celdas[indice] = nuevoNodo;
     } else {
-        // La lista no está vacía, verificamos si el elemento ya existe en la lista
+        // La lista no estï¿½ vacï¿½a, verificamos si el elemento ya existe en la lista
         struct Nodo* p = RS->celdas[indice];
         while (p != NULL) {
             if (strcmp(p->envio.codigo, nuevoEnvio.codigo) == 0) {
@@ -141,12 +141,12 @@ int BajaRS(rs* RS, Envio envio) {
         && (p->envio.dni_remitente == envio.dni_remitente) && (strcmp(p->envio.fecha_envio,envio.fecha_envio)==0)
         && (strcmp(p->envio.fecha_recepcion,envio.fecha_recepcion)==0) && (strcmp(p->envio.nombre,envio.nombre)==0)
         && (strcmp(p->envio.nombre_r,envio.nombre_r)==0)) {
-                // Se encontró el envío, ahora lo eliminamos del RS
+                // Se encontrï¿½ el envï¿½o, ahora lo eliminamos del RS
                 if (anterior == NULL) {
-                    // El envío estaba en la primera posición de la lista
+                    // El envï¿½o estaba en la primera posiciï¿½n de la lista
                     RS->celdas[indice] = p->siguiente;
                 } else {
-                    // El envío estaba en una posición diferente de la lista
+                    // El envï¿½o estaba en una posiciï¿½n diferente de la lista
                     anterior->siguiente = p->siguiente;
                 }
 
@@ -158,7 +158,7 @@ int BajaRS(rs* RS, Envio envio) {
         }
     }
 
-    return 0;  // El envío no se encontró en la estructura RS
+    return 0;  // El envï¿½o no se encontrï¿½ en la estructura RS
 }
 
 
@@ -196,9 +196,9 @@ int EvocarRS(rs* RS, char C[], Envio *envio) {
             }
             p = p->siguiente;
         }
-        return 0;  // El código no se encontró en el rebalse separado
+        return 0;  // El cï¿½digo no se encontrï¿½ en el rebalse separado
     } else {
-        return 0;  // El código no se encontró en la tabla hash
+        return 0;  // El cï¿½digo no se encontrï¿½ en la tabla hash
     }
 }
 

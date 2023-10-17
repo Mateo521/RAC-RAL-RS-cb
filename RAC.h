@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
-#define MaxEnviosRAC 60
+#define MaxEnviosRAC 300
 
 typedef struct {
     Envio envio;
@@ -50,69 +50,39 @@ float temporal_FRAC=0.0;
 float CantLocalizarRAC=0.0;
 rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p)
 {
-
-   CantLocalizarRAC++;
-
-    float costoEvocarExitoso =0.0;
-     float costoEvocarFracaso =0.0;
-    float temp = 0.0;
-
     int H = Hashing(C, MaxEnviosRAC);
-
-    int i = 0,j=1;
+    int i = 0, primerbaldelibre = 0, controldeprimerbaldelibre = 0, j = 1;
     rloc aux;
 
-
-    while (i < MaxEnviosRAC && (int)CantLocalizarRAC <= MaxEnviosRAC) {
-
-             temp++;
-        if (RAC[H].Flag == 2 && strcmp(RAC[H].envio.codigo, C) == 0) {
-
-
-            aux.exito = 1;
-               if(p==1){
-            CantEvocarExitosoRAC++;
-                    if(EvocarExitosoMaximoRAC<temp){
-                        EvocarExitosoMaximoRAC = temp;
-                    }
-                    costoEvocarExitoso+=temp;
-
-                     temporal_ERAC+=costoEvocarExitoso;
-
-
-             }
-            aux.lugar = H;
-            return aux;  // Encontramos el envío, marcamos éxito y su posición
+    while (i < MaxEnviosRAC && RAC[H].Flag != 0 && (strcmp(RAC[H].envio.codigo, C) != 0)) {
+        if (controldeprimerbaldelibre == 0 && RAC[H].Flag == 1) {
+            primerbaldelibre = H;
+            controldeprimerbaldelibre = 1;
         }
-        else if (RAC[H].Flag == 0) {
-            CantEvocarFracasoRAC++;
-                 if(p==1){
-
-                         if(EvocarFracasoMaximoRAC<temp){
-                        EvocarFracasoMaximoRAC = temp;
-                    }
-            costoEvocarFracaso+=temp;
-
-            temporal_FRAC+=costoEvocarFracaso;
-
-
-             }
-            aux.exito = 0;
-            aux.lugar = H;  // Encontramos una posición vacía, marcamos no éxito y su posición
-            return aux;
-        }
-        H = (H + j * j) % MaxEnviosRAC;  // Rebalse cuadrático abierto: Avanzamos cuadráticamente
+        H = (H + j*j) % MaxEnviosRAC;
         i++;
         j++;
+    }
+    if (RAC[H].Flag == 0) {
+        if (controldeprimerbaldelibre == 1)
+            H = primerbaldelibre;
+        aux.exito = false;
+    } else {
+        if (i == MaxEnviosRAC) {
+            aux.exito = false;
+            if (controldeprimerbaldelibre == 1)
+                H = primerbaldelibre;
 
+        } else if ((strcmp(RAC[H].envio.codigo, C) == 0) &&  RAC[H].Flag == 2)
+            aux.exito = true;
+    }
+    aux.lugar = H;
 
-
-
-
+    // Agrega el nuevo parï¿½metro `pos` a la instrucciï¿½n `return`
+    if (pos != NULL) {
+        *pos = aux.lugar;
     }
 
-
-   // No se encontró el envío, marcamos no éxito y posición -1
     return aux;
 }
 
@@ -123,7 +93,7 @@ rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p, int *FlagAlta) {
     int i = 0;
     int primerbaldelibre = -1;
     int controldeprimerbaldelibre = 0;
-    int j = 1; // Inicializar j en 1 (se incrementará cuadráticamente)
+    int j = 1; // Inicializar j en 1 (se incrementarï¿½ cuadrï¿½ticamente)
     rloc aux;
 
     while (i < MaxEnvios && RAC[H].Flag != 0 && (strcmp(RAC[H].envio.codigo, C) != 0)) {
@@ -131,7 +101,7 @@ rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p, int *FlagAlta) {
             primerbaldelibre = H;
             controldeprimerbaldelibre = 1;
         }
-        H = (H + j * j) % MaxEnvios; // Incremento cuadrático
+        H = (H + j * j) % MaxEnvios; // Incremento cuadrï¿½tico
         i++;
         j++;
     }
@@ -147,7 +117,7 @@ rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p, int *FlagAlta) {
             if (controldeprimerbaldelibre == 1) {
                 H = primerbaldelibre;
             }
-            // No modifiques *FlagAlta aquí, ya que el código no se encontró.
+            // No modifiques *FlagAlta aquï¿½, ya que el cï¿½digo no se encontrï¿½.
         } else if (strcmp(RAC[H].envio.codigo, C) == 0) {
             aux.exito = true;
         }
@@ -155,7 +125,7 @@ rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p, int *FlagAlta) {
 
     aux.lugar = H;
 
-    // Si el código se encontró o si se cambió FlagAlta en la última parte, modifica *FlagAlta.
+    // Si el cï¿½digo se encontrï¿½ o si se cambiï¿½ FlagAlta en la ï¿½ltima parte, modifica *FlagAlta.
     if (aux.exito || controldeprimerbaldelibre == 1) {
         *FlagAlta = 1;
     }
@@ -182,12 +152,12 @@ int AltaRAC(rac *RAC, Envio envio) {
         return 0; // Elemento ya existe o no se puede agregar
     } else {
 
-        // Si la función LocalizarRAC encontró un lugar disponible, puedes insertar el elemento C
+        // Si la funciï¿½n LocalizarRAC encontrï¿½ un lugar disponible, puedes insertar el elemento C
         RAC[aux.lugar].envio = envio;
         RAC[aux.lugar].Flag = 2; // Marcar el casillero como OCUPADO
-        // Actualiza cualquier otro contador o información que necesites
+        // Actualiza cualquier otro contador o informaciï¿½n que necesites
         CantAltasRAC++;
-        return 1; // Elemento agregado con éxito
+        return 1; // Elemento agregado con ï¿½xito
     }
 
 }
@@ -211,7 +181,7 @@ int BajaRAC(rac *RAC, Envio envio)
              ){
 
        RAC[aux.lugar].Flag = 1; // Marcar el casillero como LIBRE
-        // Realiza cualquier otra operación necesaria, como liberar memoria si es aplicable
+        // Realiza cualquier otra operaciï¿½n necesaria, como liberar memoria si es aplicable
  return 1; // Baja exitosa
       }
 
@@ -255,7 +225,7 @@ void MostrarEnviosRAC(rac RAC[]) {
             case 2:
                 printf("\t\t POSICION [ %i ] OCUPADA\n", i);
                 contador ++;
-                mostrarenvio(RAC[i].envio); // Llama a la función para mostrar un envío
+                mostrarenvio(RAC[i].envio); // Llama a la funciï¿½n para mostrar un envï¿½o
                 break;
         }
     }
