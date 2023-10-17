@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
-#define MaxEnviosRAC 300
+#define MaxEnviosRAC 100
 
 typedef struct {
     Envio envio;
@@ -46,6 +46,7 @@ float EvocarFracasoMaximoRAC= 0.0;
 
 float temporal_ERAC=0.0;
 float temporal_FRAC=0.0;
+//int FlagAlta;
 
 float CantLocalizarRAC=0.0;
 rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p)
@@ -53,13 +54,14 @@ rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p)
     int H = Hashing(C, MaxEnviosRAC);
     int i = 0, primerbaldelibre = 0, controldeprimerbaldelibre = 0, j = 1;
     rloc aux;
-
+  //  FlagAlta = 0;
+  aux.exito= false;
     while (i < MaxEnviosRAC && RAC[H].Flag != 0 && (strcmp(RAC[H].envio.codigo, C) != 0)) {
         if (controldeprimerbaldelibre == 0 && RAC[H].Flag == 1) {
             primerbaldelibre = H;
             controldeprimerbaldelibre = 1;
         }
-        H = (H + j*j) % MaxEnviosRAC;
+        H = (H + j) % MaxEnviosRAC;
         i++;
         j++;
     }
@@ -72,13 +74,12 @@ rloc LocalizarRAC(rac *RAC, char C[], int *pos, int p)
             aux.exito = false;
             if (controldeprimerbaldelibre == 1)
                 H = primerbaldelibre;
-
         } else if ((strcmp(RAC[H].envio.codigo, C) == 0) &&  RAC[H].Flag == 2)
             aux.exito = true;
     }
     aux.lugar = H;
 
-    // Agrega el nuevo par�metro `pos` a la instrucci�n `return`
+    // Agrega el nuevo parámetro `pos` a la instrucción `return`
     if (pos != NULL) {
         *pos = aux.lugar;
     }
@@ -154,7 +155,9 @@ int AltaRAC(rac *RAC, Envio envio) {
 
         // Si la funci�n LocalizarRAC encontr� un lugar disponible, puedes insertar el elemento C
         RAC[aux.lugar].envio = envio;
+
         RAC[aux.lugar].Flag = 2; // Marcar el casillero como OCUPADO
+
         // Actualiza cualquier otro contador o informaci�n que necesites
         CantAltasRAC++;
         return 1; // Elemento agregado con �xito
@@ -166,7 +169,7 @@ int AltaRAC(rac *RAC, Envio envio) {
 ///---------------------------------------------------------BAJA
 
 
-
+float CantBajasRAC =0.0;
 int BajaRAC(rac *RAC, Envio envio)
 {
 
@@ -181,6 +184,7 @@ int BajaRAC(rac *RAC, Envio envio)
              ){
 
        RAC[aux.lugar].Flag = 1; // Marcar el casillero como LIBRE
+        CantBajasRAC++;
         // Realiza cualquier otra operaci�n necesaria, como liberar memoria si es aplicable
  return 1; // Baja exitosa
       }

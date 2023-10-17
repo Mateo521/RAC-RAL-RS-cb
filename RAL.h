@@ -53,14 +53,15 @@ float EvocarFracasoMaximoRAL= 0.0;
 
 float temporal_ERAL=0.0;
 float temporal_FRAL=0.0;
-int FlagAlta;
+//int FlagAlta;
 
 rloc LocalizarRAL(ral *RAL, char C[], int *pos, int p)
 {
     int H = Hashing(C, MaxEnviosRAL);
     int i = 0, primerbaldelibre = 0, controldeprimerbaldelibre = 0, j = 1;
     rloc aux;
-    FlagAlta = 0;
+    aux.exito = false;
+  //  FlagAlta = 0;
     while (i < MaxEnviosRAL && RAL[H].Flag != 0 && (strcmp(RAL[H].envio.codigo, C) != 0)) {
         if (controldeprimerbaldelibre == 0 && RAL[H].Flag == 1) {
             primerbaldelibre = H;
@@ -78,8 +79,6 @@ rloc LocalizarRAL(ral *RAL, char C[], int *pos, int p)
             aux.exito = false;
             if (controldeprimerbaldelibre == 1)
                 H = primerbaldelibre;
-            else
-                FlagAlta = 1;
         } else if ((strcmp(RAL[H].envio.codigo, C) == 0) &&  RAL[H].Flag == 2)
             aux.exito = true;
     }

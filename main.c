@@ -77,7 +77,7 @@ initRAL(RAL);
                  printf("   RS::");
             //    printf(" %0.2f |      %0.2f |      %0.2f |        %0.2f |\n", EvocarExitosoMaximoRS ,(temporal_ERAC/CantEvocarExitosoRS), EvocarFracasoMaximoRS , (temporal_FRS/CantEvocarFracasoRS) );
                 printf("------------------------------------------------------------------\n");
-                 printf("Cant altas: %0.2f , maxenvios %d,  p = %0.2f\n", CantAltasRAC, MaxEnviosRAC ,CantAltasRAC/(float)MaxEnviosRAC);
+                 printf("Cant altas RAC: %0.2f , maxenvios %d,  p = %0.2f\n", CantAltasRAC, MaxEnviosRAC ,CantAltasRAC/(float)MaxEnviosRAC);
                     break;
             case 2:
 
@@ -185,9 +185,10 @@ int LecturaOperaciones(rac *RAC, ral *RAL, rs *RS)
 
           //     printf("ALTA: %s\n", aux.codigo);
 
-                     AltaRAC(RAC,aux);
-                     AltaRAL(RAL,aux);
-                    AltaRS(RS, aux);
+                   AltaRAC(RAC,aux);
+                   AltaRAL(RAL,aux);
+
+                 AltaRS(RS, aux);
 /*
                         printf("%d\n" , Hashing(aux.codigo,300));
 */
@@ -195,23 +196,21 @@ int LecturaOperaciones(rac *RAC, ral *RAL, rs *RS)
                else if(codigoOperador == 2)
                 {
 
+            BajaRAC(RAC,aux); // no funciona
 
 
+             BajaRAL(RAL,aux);
 
-
-        BajaRAC(RAC,aux); // no funciona
-
-       BajaRAL(RAL,aux);
-                    BajaRS(RS, aux); //funciono
+                BajaRS(RS, aux); //funciono
                 }
 
             }
             else if (codigoOperador == 3)
             {
-               EvocarRAC(RAC,aux.codigo,&aux);
-               EvocarRAL(RAL,aux.codigo,&aux);
+          //   EvocarRAC(RAC,aux.codigo,&aux);
+           //    EvocarRAL(RAL,aux.codigo,&aux);
 
-               EvocarRS(RS, aux.codigo, &aux);
+         //      EvocarRS(RS, aux.codigo, &aux);
 
            }
             else
@@ -223,7 +222,9 @@ int LecturaOperaciones(rac *RAC, ral *RAL, rs *RS)
 
         }
 
-        printf("ALTA %f, BAJA %f", CantAltasRAL , CantBajasRAL);
+      // printf("ALTA RAL %f, BAJA RAL %f\n", CantAltasRAL , CantBajasRAL);
+
+        //  printf("ALTA RAC %f, BAJA RAC %f", CantAltasRAC , CantBajasRAC);
         fclose(fp);
 
 

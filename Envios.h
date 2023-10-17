@@ -4,7 +4,6 @@
 #include <ctype.h>
 #ifndef UNTITLED_ENVIOS_H
 #define UNTITLED_ENVIOS_H
-#define MAX_REGISTROS 1000
 #define MAX_LONGITUD 100
 #define MAX_Envios 300
 
