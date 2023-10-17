@@ -1,6 +1,6 @@
 #ifndef RS_H_INCLUDED
 #define RS_H_INCLUDED
-#define MaxEnvios 300
+#define MaxEnviosRS 60
 
 #include <stdbool.h>
 #include "Envios.h"
@@ -11,13 +11,13 @@ typedef struct Nodo {
     struct Nodo* siguiente;
 } nodo;
 typedef struct Rebalse_Separado {
-    struct Nodo* celdas[MaxEnvios];
+    struct Nodo* celdas[MaxEnviosRS];
 } rs;
 
 
 
 void initRS(rs* RS) {
-    for (int i = 0; i < MaxEnvios; i++) {
+    for (int i = 0; i < MaxEnviosRS; i++) {
         RS->celdas[i] = NULL;
     }
 }
@@ -26,24 +26,54 @@ void initRS(rs* RS) {
 // Función hash
 
 
+
+float CantEvocarExitosoRS = 0.0;
+float CantEvocarFracasoRS = 0.0;
+
+
+float EvocarExitosoMaximoRS= 0.0;
+float EvocarFracasoMaximoRS= 0.0;
+
+float temporal_ERS=0.0;
+float temporal_FRS=0.0;
+
 // Función para verificar si un valor 'codigo' pertenece a la tabla hash con rebalse separado
 int LocalizarRS(rs *RS, char *codigo, int *indice, int ev) {
+     float costoEvocarExitoso =0.0;
+     float costoEvocarFracaso =0.0;
+     float temp = 0.0;
     int i = 0;
-
     // Recorres las celdas del arreglo RS->celdas
-    for (i = 0; i < MaxEnvios; i++) {
+    for (i = 0; i < MaxEnviosRS; i++) {
+             temp++;
         struct Nodo* p = RS->celdas[i];
-
         // Recorres los nodos en la celda actual
         while (p != NULL) {
             if (strcmp(p->envio.codigo, codigo) == 0) {
                 *indice = i;  // Almacena el índice de la celda donde se encontró el valor 'codigo'
+                  if(ev==1){
+                    CantEvocarExitosoRS++;
+                    if(EvocarExitosoMaximoRS<temp){
+                        EvocarExitosoMaximoRS = temp;
+                    }
+                    costoEvocarExitoso+=temp;
+                     temporal_ERS+=costoEvocarExitoso;
+             }
                 return 1;      // Se encontró el valor 'codigo'
+            } else {
+                p = p->siguiente;
+                 if(ev==1){
+                        CantEvocarFracasoRS++;
+                         if(EvocarFracasoMaximoRS<temp){
+                            EvocarFracasoMaximoRS = temp;
+                    }
+                costoEvocarFracaso+=temp;
+                temporal_FRS+=costoEvocarFracaso;
+             }
             }
-            p = p->siguiente;
         }
-    }
 
+    }
     return 0;  // El valor 'codigo' no se encontró en ninguna de las celdas
 }
 
@@ -54,8 +84,9 @@ int LocalizarRS(rs *RS, char *codigo, int *indice, int ev) {
 
 
 
+
 int AltaRS(rs* RS, Envio nuevoEnvio) {
-    int indice = Hashing(nuevoEnvio.codigo, MaxEnvios);
+    int indice = Hashing(nuevoEnvio.codigo, MaxEnviosRS);
 
 
     if (LocalizarRS(RS, nuevoEnvio.codigo, &indice,0) == 0) {
@@ -96,7 +127,7 @@ int AltaRS(rs* RS, Envio nuevoEnvio) {
 
 
 int BajaRS(rs* RS, Envio envio) {
-    int indice = Hashing(envio.codigo, MaxEnvios);
+    int indice = Hashing(envio.codigo, MaxEnviosRS);
 
     // Utiliza el nuevo LocalizarRS
     int encontrado = LocalizarRS(RS, envio.codigo, &indice, 0);
@@ -138,7 +169,7 @@ int BajaRS(rs* RS, Envio envio) {
 void MostrarEnviosRS(rs* RS) {
     int contadorEnvios = 0;
 
-    for (int i = 0; i < MaxEnvios; i++) {
+    for (int i = 0; i < MaxEnviosRS; i++) {
         struct Nodo* p = RS->celdas[i];
         printf("Celda %d:\n", i);
         while (p != NULL) {
@@ -154,7 +185,7 @@ void MostrarEnviosRS(rs* RS) {
 
 
 int EvocarRS(rs* RS, char C[], Envio *envio) {
-    int indice = Hashing(C, MaxEnvios);
+    int indice = Hashing(C, MaxEnviosRS);
     if (LocalizarRS(RS, C, &indice, 1) == 0) {
         struct Nodo* p = RS->celdas[indice];
         while (p != NULL) {

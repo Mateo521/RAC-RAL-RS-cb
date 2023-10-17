@@ -39,14 +39,14 @@ int main()
     int opcion, submenu_opcion;
 
 
-rac RAC[MaxEnvios];
+rac RAC[MaxEnviosRAC];
 initRAC(RAC);
 
 
 rs RS;
 initRS(&RS);
 
-ral RAL[MaxEnvios];
+ral RAL[MaxEnviosRAL];
 initRAL(RAL);
 
 
@@ -69,13 +69,15 @@ initRAL(RAL);
 
                 printf("\t Max.Ev.Ex | Med.Ev.Ex | Max.Ev.Fr | Med.Ev.Fr|\n");
                    printf("   RAL::");
-                printf(" %0.2f |      %0.2f |       %0.2f |      %0.2f |\n", EvocarExitosoMaximoRAL,(temporal_ERAL/CantEvocarExitosoRAL), EvocarFracasoMaximoRAL , (temporal_FRAL/CantEvocarFracasoRAL) );
+              //  printf(" %0.2f |      %0.2f |       %0.2f |      %0.2f |\n", EvocarExitosoMaximoRAL,(temporal_ERAL/CantEvocarExitosoRAL), EvocarFracasoMaximoRAL , (temporal_FRAL/CantEvocarFracasoRAL) );
                 printf("-----------------------------------------------------------------\n");
                 printf("   RAC::");
                 printf(" %0.2f |      %0.2f |      %0.2f |        %0.2f |\n", EvocarExitosoMaximoRAC ,(temporal_ERAC/CantEvocarExitosoRAC), EvocarFracasoMaximoRAC , (temporal_FRAC/CantEvocarFracasoRAC) );
                 printf("-----------------------------------------------------------------\n");
-                printf("    RS::\n");
+                 printf("   RS::");
+            //    printf(" %0.2f |      %0.2f |      %0.2f |        %0.2f |\n", EvocarExitosoMaximoRS ,(temporal_ERAC/CantEvocarExitosoRS), EvocarFracasoMaximoRS , (temporal_FRS/CantEvocarFracasoRS) );
                 printf("------------------------------------------------------------------\n");
+                 printf("Cant altas: %0.2f , maxenvios %d,  p = %0.2f\n", CantAltasRAC, MaxEnviosRAC ,CantAltasRAC/(float)MaxEnviosRAC);
                     break;
             case 2:
 
@@ -183,9 +185,9 @@ int LecturaOperaciones(rac *RAC, ral *RAL, rs *RS)
 
           //     printf("ALTA: %s\n", aux.codigo);
 
-                       AltaRS(RS, aux);
-                       AltaRAC(RAC,aux);
-                       AltaRAL(RAL,aux);
+                //      AltaRS(RS, aux);
+                   //    AltaRAC(RAC,aux);
+                     AltaRAL(RAL,aux);
 /*
                         printf("%d\n" , Hashing(aux.codigo,300));
 */
@@ -194,13 +196,12 @@ int LecturaOperaciones(rac *RAC, ral *RAL, rs *RS)
                 {
 
 
-             //   printf("BAJA: %s\n", aux.codigo);
 
-            BajaRS(RS, aux); //funciono
+    //  BajaRS(RS, aux); //funciono
 
-    BajaRAC(RAC,aux); // no funciona
+       // BajaRAC(RAC,aux); // no funciona
 
-    BajaRAL(RAL,aux); // no funciona
+       BajaRAL(RAL,aux);
 
                 }
 
@@ -222,6 +223,7 @@ int LecturaOperaciones(rac *RAC, ral *RAL, rs *RS)
 
         }
 
+        printf("ALTA %f, BAJA %f", CantAltasRAL , CantBajasRAL);
         fclose(fp);
 
 

@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
-#define MaxEnvios 300
+#define MaxEnviosRAL 300
 
 ///---------------------------------------------------------ESTRUCTURAS
 typedef struct
@@ -18,7 +18,7 @@ typedef struct
 void initRAL(ral *RAL)
 {
 
-    for (int i = 0; i < MaxEnvios; i++)
+    for (int i = 0; i < MaxEnviosRAL; i++)
     {
 
         RAL[i].Flag = 0; // Inicializar el campo Flag a 0
@@ -53,17 +53,57 @@ float EvocarFracasoMaximoRAL= 0.0;
 
 float temporal_ERAL=0.0;
 float temporal_FRAL=0.0;
+int FlagAlta;
+
 rloc LocalizarRAL(ral *RAL, char C[], int *pos, int p)
+{
+    int H = Hashing(C, MaxEnviosRAL);
+    int i = 0, primerbaldelibre = 0, controldeprimerbaldelibre = 0, j = 1;
+    rloc aux;
+    FlagAlta = 0;
+    while (i < MaxEnviosRAL && RAL[H].Flag != 0 && (strcmp(RAL[H].envio.codigo, C) != 0)) {
+        if (controldeprimerbaldelibre == 0 && RAL[H].Flag == 1) {
+            primerbaldelibre = H;
+            controldeprimerbaldelibre = 1;
+        }
+        H = (H + j) % MaxEnviosRAL;
+        i++;
+    }
+    if (RAL[H].Flag == 0) {
+        if (controldeprimerbaldelibre == 1)
+            H = primerbaldelibre;
+        aux.exito = false;
+    } else {
+        if (i == MaxEnviosRAL) {
+            aux.exito = false;
+            if (controldeprimerbaldelibre == 1)
+                H = primerbaldelibre;
+            else
+                FlagAlta = 1;
+        } else if ((strcmp(RAL[H].envio.codigo, C) == 0) &&  RAL[H].Flag == 2)
+            aux.exito = true;
+    }
+    aux.lugar = H;
+
+    // Agrega el nuevo parámetro `pos` a la instrucción `return`
+    if (pos != NULL) {
+        *pos = aux.lugar;
+    }
+
+    return aux;
+}
+
+/*rloc LocalizarRAL(ral *RAL, char C[], int *pos, int p)
 {
 
     float costoEvocarExitoso =0.0;
      float costoEvocarFracaso =0.0;
      float temp = 0.0;
-    int H = Hashing(C, MaxEnvios);
+    int H = Hashing(C, MaxEnviosRAL);
     int i = 0;
     rloc aux;
 
-    while (i < MaxEnvios) {
+    while (i < MaxEnviosRAL) {
             temp++;
         if (RAL[H].Flag == 2 && strcmp(RAL[H].envio.codigo, C) == 0) {
             aux.exito = 1;
@@ -71,7 +111,7 @@ rloc LocalizarRAL(ral *RAL, char C[], int *pos, int p)
 
 
                     if(p==1){
- CantEvocarExitosoRAL++;
+                    CantEvocarExitosoRAL++;
                     if(EvocarExitosoMaximoRAL<temp){
                         EvocarExitosoMaximoRAL = temp;
                     }
@@ -104,52 +144,50 @@ rloc LocalizarRAL(ral *RAL, char C[], int *pos, int p)
 
             return aux;
         }
-        H = (H + 1) % MaxEnvios;  // Avanzamos al siguiente índice
+        H = (H + i) % MaxEnviosRAL;  // Avanzamos al siguiente índice
         i++;
     }
 
     aux.exito = 0;
     aux.lugar = -1;  // No se encontró el envío, marcamos no éxito y posición -1
     return aux;
-}
-
-
+}*/
 ///---------------------------------------------------------ALTA
+
+float CantAltasRAL =0.0;
 int AltaRAL(ral *RAL, Envio envio) {
+
 
     int pos;
     rloc aux = LocalizarRAL(RAL, envio.codigo, &pos, 0);
-    if (aux.exito) {
-        return 0; // Elemento ya existe o no se puede agregar
+    if (aux.exito == 1) {
+        return 0;
     } else {
-        if (aux.lugar >= 0 && aux.lugar < MaxEnvios) {
 
-     //             printf("%d\n",aux.lugar);
+            CantAltasRAL++;
             RAL[aux.lugar].envio = envio;
-            RAL[aux.lugar].Flag = 2; // Marcar el casillero como OCUPADO
-            return 1; // Elemento agregado con éxito
-        } else {
-            return 0; // El índice está fuera de rango
-        }
+            RAL[aux.lugar].Flag = 2;
+            return 1;
+
     }
 }
-///---------------------------------------------------------BAJA
 
+///---------------------------------------------------------BAJA
+float CantBajasRAL =0.0;
 int BajaRAL(ral *RAL, Envio envio)
 {
     int pos;
     rloc aux = LocalizarRAL(RAL, envio.codigo, &pos, 0);
 
-    if (aux.exito == 1) {
-
-
+    if (aux.exito==1) {
               if ((strcmp(RAL[aux.lugar].envio.codigo, envio.codigo)==0) && (strcmp(RAL[aux.lugar].envio.direccion, envio.direccion)==0) && (RAL[aux.lugar].envio.dni_receptor == envio.dni_receptor) &&
              (RAL[aux.lugar].envio.dni_remitente == envio.dni_remitente)&& (strcmp(RAL[aux.lugar].envio.fecha_envio, envio.fecha_envio)==0) && (strcmp(RAL[aux.lugar].envio.fecha_recepcion, envio.fecha_recepcion)==0)
              && (strcmp(RAL[aux.lugar].envio.nombre, envio.nombre)==0) && (strcmp(RAL[aux.lugar].envio.nombre_r, envio.nombre_r)==0)
              ){
 
-       RAL[aux.lugar].Flag = 1; // Marcar el casillero como LIBRE
- return 1; // Baja exitosa
+            RAL[aux.lugar].Flag = 1; // Marcar el casillero como LIBRE
+            CantBajasRAL++;
+            return 1; // Baja exitosa
 
        }
         // Realiza cualquier otra operación necesaria, como liberar memoria si es aplicable
@@ -183,7 +221,7 @@ void MostrarEnviosRAL(ral RAL[])
 {
 
     int i,contador=0;
-    for (i = 0; i < MaxEnvios; i++)
+    for (i = 0; i < MaxEnviosRAL; i++)
     {
 
         switch (RAL[i].Flag)
