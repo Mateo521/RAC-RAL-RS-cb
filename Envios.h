@@ -44,9 +44,10 @@ int Hashing(char * x, int M){
 }
 
 typedef struct {
+     int exito;
     int lugar;
-    int exito;
-}rloc;
+
+}cons;
 
 
 #endif //UNTITLED_ENVIOS_H

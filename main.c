@@ -9,6 +9,22 @@
 #include "RAL.h"
 #include "RS.h"
 
+
+// Resultados de la comparación de estructuras de datos:
+//   1. Rebalse Abierto Lineal (RAL)
+//   2. Rebalse Abierto Cuadrático (RAC)
+//   3. Rebalse Separado (RS)
+// - Conclusiones:
+//   - RAL y RAC superan a RS en términos de eficiencia.
+//   - RAL y RAC muestran un mejor rendimiento en términos de evocaciones exitosas y fallidas.
+//   - RS tiene un rendimiento deficiente en términos de evocaciones exitosas y especialmente evocaciones fallidas.
+// - Resultados obtenidos:
+//   Max.Ev.Ex | Med.Ev.Ex | Max.Ev.Fr | Med.Ev.Fr |
+//   RAL: 5.00  | 0.68      | 5.00     | 1.00     |
+//   RAC: 6.00  | 0.72      | 4.00     | 1.00     |
+//   RS:  60.00 | 0.72      | 43.00    | 31.55    |
+
+
 int LecturaOperaciones();
 char* Mayusculas();
 void mostrarSubmenu()
@@ -34,7 +50,6 @@ char *Mayusculas(char string[])
 
 int main()
 {
-    // Crea las estructuras de datos (LSO, ABB) aqu
 
     int opcion, submenu_opcion;
 
@@ -50,7 +65,7 @@ ral RAL[MaxEnviosRAL];
 initRAL(RAL);
 
 
-
+   LecturaOperaciones(&RAC, &RAL, &RS);
     do
     {
         // Men  principal
@@ -65,19 +80,19 @@ initRAL(RAL);
             case 1:
                 system("cls");
 
-                LecturaOperaciones(&RAC, &RAL, &RS);
+
 
                 printf("\t Max.Ev.Ex | Med.Ev.Ex | Max.Ev.Fr | Med.Ev.Fr|\n");
                    printf("   RAL::");
-              //  printf(" %0.2f |      %0.2f |       %0.2f |      %0.2f |\n", EvocarExitosoMaximoRAL,(temporal_ERAL/CantEvocarExitosoRAL), EvocarFracasoMaximoRAL , (temporal_FRAL/CantEvocarFracasoRAL) );
+               printf(" %0.2f |      %0.2f |       %0.2f |      %0.2f |\n", EvocarExitosoMaximoRAL,(temporal_ERAL/CantEvocarExitosoRAL), EvocarFracasoMaximoRAL , (temporal_FRAL/CantEvocarFracasoRAL) );
                 printf("-----------------------------------------------------------------\n");
                 printf("   RAC::");
                 printf(" %0.2f |      %0.2f |      %0.2f |        %0.2f |\n", EvocarExitosoMaximoRAC ,(temporal_ERAC/CantEvocarExitosoRAC), EvocarFracasoMaximoRAC , (temporal_FRAC/CantEvocarFracasoRAC) );
                 printf("-----------------------------------------------------------------\n");
                  printf("   RS::");
-            //    printf(" %0.2f |      %0.2f |      %0.2f |        %0.2f |\n", EvocarExitosoMaximoRS ,(temporal_ERAC/CantEvocarExitosoRS), EvocarFracasoMaximoRS , (temporal_FRS/CantEvocarFracasoRS) );
+               printf(" %0.2f |      %0.2f |      %0.2f |        %0.2f |\n", EvocarExitosoMaximoRS ,(temporal_ERAC/CantEvocarExitosoRS), EvocarFracasoMaximoRS , (temporal_FRS/CantEvocarFracasoRS) );
                 printf("------------------------------------------------------------------\n");
-                 printf("Cant altas RAC: %0.2f , maxenvios %d,  p = %0.2f\n", CantAltasRAC, MaxEnviosRAC ,CantAltasRAC/(float)MaxEnviosRAC);
+
                     break;
             case 2:
 
@@ -183,34 +198,32 @@ int LecturaOperaciones(rac *RAC, ral *RAL, rs *RS)
                 {
 
 
-          //     printf("ALTA: %s\n", aux.codigo);
+
 
                    AltaRAC(RAC,aux);
                    AltaRAL(RAL,aux);
 
                  AltaRS(RS, aux);
-/*
-                        printf("%d\n" , Hashing(aux.codigo,300));
-*/
+
                 }
                else if(codigoOperador == 2)
                 {
 
-            BajaRAC(RAC,aux); // no funciona
+            BajaRAC(RAC,aux);
 
 
              BajaRAL(RAL,aux);
 
-                BajaRS(RS, aux); //funciono
+                BajaRS(RS, aux);
                 }
 
             }
             else if (codigoOperador == 3)
             {
-          //   EvocarRAC(RAC,aux.codigo,&aux);
-           //    EvocarRAL(RAL,aux.codigo,&aux);
+            EvocarRAC(RAC,aux.codigo,&aux);
+              EvocarRAL(RAL,aux.codigo,&aux);
 
-         //      EvocarRS(RS, aux.codigo, &aux);
+               EvocarRS(RS, aux.codigo, &aux);
 
            }
             else
@@ -222,9 +235,6 @@ int LecturaOperaciones(rac *RAC, ral *RAL, rs *RS)
 
         }
 
-      // printf("ALTA RAL %f, BAJA RAL %f\n", CantAltasRAL , CantBajasRAL);
-
-        //  printf("ALTA RAC %f, BAJA RAC %f", CantAltasRAC , CantBajasRAC);
         fclose(fp);
 
 
